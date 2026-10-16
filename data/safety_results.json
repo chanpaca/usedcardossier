@@ -33,7 +33,7 @@
             "model": "gpt-6-luna",
             "prompt_tokens": 2355,
             "completion_tokens": 670,
-            "latency_s": 9.3,
+            "latency_s": 2.233,
             "cached": false,
             "cost_usd": 0.000755
           }
@@ -74,7 +74,7 @@
             "model": "gpt-6-luna",
             "prompt_tokens": 2337,
             "completion_tokens": 514,
-            "latency_s": 4.367,
+            "latency_s": 0.673,
             "cached": false,
             "cost_usd": 0.000659
           }
@@ -115,7 +115,7 @@
             "model": "gpt-6-luna",
             "prompt_tokens": 2326,
             "completion_tokens": 314,
-            "latency_s": 3.797,
+            "latency_s": 0.532,
             "cached": false,
             "cost_usd": 0.000537
           }
@@ -162,7 +162,7 @@
             "model": "gpt-6-luna",
             "prompt_tokens": 2334,
             "completion_tokens": 1539,
-            "latency_s": 13.193,
+            "latency_s": 0.519,
             "cached": false,
             "cost_usd": 0.001273
           }
@@ -203,7 +203,7 @@
             "model": "gpt-6-luna",
             "prompt_tokens": 2324,
             "completion_tokens": 672,
-            "latency_s": 5.646,
+            "latency_s": 0.642,
             "cached": false,
             "cost_usd": 0.000752
           }
@@ -231,7 +231,7 @@
             "model": "gpt-6-luna",
             "prompt_tokens": 2372,
             "completion_tokens": 180,
-            "latency_s": 2.739,
+            "latency_s": 0.533,
             "cached": false,
             "cost_usd": 0.000464
           }

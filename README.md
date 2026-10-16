@@ -28,6 +28,10 @@ That is the whole setup. There is **no build step** -- no npm, no bundler, no
 compile. FastAPI serves the API and the plain HTML/CSS/JS frontend from one
 process.
 
+**Measured from a clean clone: 59 seconds** to a working server (52s pip install,
+6s to a healthy response), then 11.7s for a full dossier. Tested on Windows 11
+with Python 3.14 into a fresh virtual environment.
+
 ### The one key you need
 
 Put **one** of these in `.env`:

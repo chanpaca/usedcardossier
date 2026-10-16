@@ -206,3 +206,40 @@ source data, confirm it catches the corruption. Six cases, 2018 Honda Accord gro
 useless. Unplanned bonus -- in wrong_spec it also flagged that an EMPTY known_problems list
 omits real recalls, i.e. it catches false NEGATIVES, not just fabrications.
 
+## 2026-10-16 — Build session 4: app complete, verified end to end
+
+### Bugs found by running the thing (all fixed)
+1. **Gateway parameter dialect** — Portkey/azure rejects `max_tokens`. Adaptive client now
+   renames/drops rejected params and retries.
+2. **gpt-6-luna is a reasoning model** — cap 900 produced 900 completion tokens and an EMPTY
+   string; cap 3000 produced 1,047 tokens and valid JSON. Caps raised, empty response retries
+   at double.
+3. **EPA vs NHTSA model names** — EPA "Accord Sport/Touring", "Civic 4Dr", "F150 Pickup 4WD";
+   NHTSA wants "Accord", "Civic", "F-150". 8 of 14 candidates were being dropped on HTTP 400.
+   Added suffix stripping, engine-token stripping and an alias map.
+4. **Shortlist was all one year** — taking the first N of a year-sorted list returned eight
+   2021 cars. Now round-robins across (year, make) buckets.
+5. **Shortlist was all one make** — keying the round robin on year alone still gave eight
+   Hondas. Now keyed on (year, make).
+6. **Defect signal silently switching off** — peer scan stopped after 10 candidates; most were
+   low-volume models, so only 3-5 cleared the complaint threshold, below the minimum for a
+   baseline. Widened the scan and interleaved makes. Accord now gets 8 peers, confidence "good".
+7. **Raw diagnostics shown as user content** — a wall of failed NHTSA URLs rendered on the
+   results page. Now one quiet line; detail kept in the API for debugging.
+8. **Cache too big to clone** — 52.4 MB. Added transparent zlib compression: **15.8 MB (30%)**.
+
+### Measured results
+- **Tokenomics** (mean of 3 dossier runs): 8,522 tok, $0.0028, Critic = 42% of cost.
+  Session (1 discovery + 3 dossiers) $0.0091 -> $0.91 at 100 users, $182/mo at 10k MAU.
+- **Safety**: 6/6 adversarial cases correct, including the clean control. $0.00444.
+- **Executability**: clean clone -> working server in **59s**; full dossier in 11.7s.
+- Catalog: 6,638 entries, 20 makes, 2013-2023. Cache: 13,872 responses.
+
+### Deliverables complete
+`report/report.html`, `report/slides.html` (10 slides), 7 screenshots from real runs,
+git repo committed.
+
+### Still outstanding (the one real gap)
+**User testing.** The Impact section is computed, not observed. Recruit 3-4 testers who are
+actually car shopping, record their five-year cost estimate before and after.
+

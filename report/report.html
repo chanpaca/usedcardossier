@@ -473,6 +473,13 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
     rather than hidden, including when it corrected the other agents.</figcaption>
 </figure>
 
+<figure>
+  <img class="shot" src="images/07-methodology.png" alt="Methodology drawer listing sources and assumptions">
+  <figcaption>Figure 7. The methodology drawer, reachable from any screen. Every data
+    source, the fit quality of the value model, and each declared assumption is listed
+    where the user can see it and disagree with a specific number.</figcaption>
+</figure>
+
 <!-- ===================== 4. TOKENOMICS ===================== -->
 <h2>4. Tokenomics</h2>
 
@@ -667,7 +674,7 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
 
 <figure>
   <img class="shot" src="images/06-safety-run.png" alt="Terminal output of the safety test suite">
-  <figcaption>Figure 7. The full suite running. Output written to
+  <figcaption>Figure 8. The full suite running. Output written to
     <code>data/safety_results.json</code>.</figcaption>
 </figure>
 
@@ -788,6 +795,34 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
   methodology drawer, and flagged here so a reader can disagree with that specific
   number rather than with the whole result.</p>
 </div>
+
+<h3>Executability, measured</h3>
+
+<p>
+  The 10-minute setup rule was tested rather than assumed: a clean
+  <code>git clone</code> into an empty directory, a fresh virtual environment, and a
+  timed run.
+</p>
+
+<table>
+  <caption>Measured 16 October 2026 on Windows 11, Python 3.14.</caption>
+  <thead><tr><th>Step</th><th class="num">Time</th></tr></thead>
+  <tbody>
+    <tr><td><code>pip install -r requirements.txt</code> into a fresh venv</td>
+      <td class="num">52s</td></tr>
+    <tr><td><code>cp .env.example .env</code> and paste one key</td><td class="num">~3s</td></tr>
+    <tr><td><code>uvicorn backend.main:app</code> to a healthy response</td><td class="num">6s</td></tr>
+    <tr class="total"><td>Total, clone to working server</td><td class="num">59s</td></tr>
+  </tbody>
+</table>
+
+<p>
+  The cloned copy then returned a complete dossier for the 2018 Accord in 11.7 seconds:
+  exact MSRP from the VIN, 5 trims, 6 recalls, $34,100 five-year cost, Critic verdict
+  <em>pass</em> over 27 checked claims. No npm, no build step, and no API key for any
+  vehicle data. The seeded response cache ships in the repo (15.8 MB compressed, down
+  from 52.4 MB) so the first run does not depend on network conditions.
+</p>
 
 <h3>Next steps, in priority order</h3>
 
