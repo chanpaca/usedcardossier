@@ -1,0 +1,19 @@
+{
+  "fitted_on": "Marketcheck us_used_car_inventory_data (non-BEV)",
+  "n": 581,
+  "as_of_year": 2026,
+  "r2": 0.6036,
+  "median_abs_pct_error": 0.209,
+  "coef": {
+    "intercept": -0.04995,
+    "age": -0.04739,
+    "miles_per_10k": -0.04222,
+    "body_Pickup": 0.33158,
+    "body_SUV": -0.02356,
+    "body_Coupe": 0.15889,
+    "body_Hatchback": 0.20549,
+    "body_Convertible": 0.15281
+  },
+  "band_low_mult": 0.7522,
+  "band_high_mult": 1.3765
+}

@@ -1,0 +1,26 @@
+# UsedCarDossier -- Python dependencies
+#   python -m pip install -r requirements.txt
+
+# --- API + static frontend ---------------------------------------------------
+# FastAPI serves both the JSON API and the plain HTML/CSS/JS frontend, so there
+# is no build step and no npm anywhere in this project.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+
+# --- agents ------------------------------------------------------------------
+# OpenAI client, pointed at either the course Portkey gateway (gpt-6-luna) or a
+# personal OpenAI key. Resolved in backend/config.py.
+openai>=1.40
+
+# --- shared ------------------------------------------------------------------
+pydantic>=2.0
+python-dotenv>=1.0
+
+# Notes
+# -----
+# * Vehicle data needs NO key and NO extra package: NHTSA and fueleconomy.gov
+#   are reached with urllib from the standard library.
+# * SQLite ships with Python; the response cache needs no driver.
+# * pandas/pyarrow are NOT runtime dependencies. They were used once, offline,
+#   to fit the depreciation curve (scripts/fit_depreciation.py). The fitted
+#   coefficients are committed in data/depreciation_params.json.

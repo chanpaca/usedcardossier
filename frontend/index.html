@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UsedCarDossier - what a used car really costs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark"></span>
+      <span>UsedCar<strong>Dossier</strong></span>
+    </a>
+    <nav class="topnav">
+      <button class="linkbtn" data-goto="start">Find a car</button>
+      <button class="linkbtn" data-goto="lookup">Check a specific car</button>
+      <button class="linkbtn" id="nav-method">How it works</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ STEP 0 : intro + funnel ============ -->
+  <section id="view-start" class="view active">
+    <div class="hero">
+      <h1>Every site tells you <em>which</em> used car to buy.<br>None tell you what it will <em>cost</em> you.</h1>
+      <p class="lede">
+        An $11,500 car can cost $34,100 to own. We work out the five-year number from
+        EPA fuel data, NHTSA defect records and AAA cost figures &mdash; and show every
+        source behind it.
+      </p>
+      <div class="hero-stats">
+        <div><span class="hs-num">5</span><span class="hs-lab">free government data sources</span></div>
+        <div><span class="hs-num">0</span><span class="hs-lab">API keys for vehicle data</span></div>
+        <div><span class="hs-num">20</span><span class="hs-lab">brands covered</span></div>
+      </div>
+    </div>
+
+    <div class="funnel card">
+      <div class="steps" id="steps">
+        <div class="step active" data-step="1"><b>1</b> Body style</div>
+        <div class="step" data-step="2"><b>2</b> Brands</div>
+        <div class="step" data-step="3"><b>3</b> Priorities</div>
+        <div class="step" data-step="4"><b>4</b> Budget</div>
+      </div>
+
+      <!-- step 1 -->
+      <div class="panel active" data-panel="1">
+        <h2>What kind of car are you after?</h2>
+        <div class="choices" id="body-choices"></div>
+      </div>
+
+      <!-- step 2 -->
+      <div class="panel" data-panel="2">
+        <h2>Any brands you prefer?</h2>
+        <p class="hint">Pick as many as you like, or skip to see everything.</p>
+        <div class="chips" id="brand-chips"></div>
+        <div class="panel-actions">
+          <button class="btn ghost" data-back="1">Back</button>
+          <button class="btn" id="brands-next">Continue</button>
+        </div>
+      </div>
+
+      <!-- step 3 -->
+      <div class="panel" data-panel="3">
+        <h2>What matters most to you?</h2>
+        <p class="hint">Pick up to three. These become the ranking weights.</p>
+        <div class="chips" id="priority-chips"></div>
+        <div class="panel-actions">
+          <button class="btn ghost" data-back="2">Back</button>
+          <button class="btn" id="priorities-next">Continue</button>
+        </div>
+      </div>
+
+      <!-- step 4 -->
+      <div class="panel" data-panel="4">
+        <h2>Budget and driving</h2>
+        <div class="grid2">
+          <label>Budget range
+            <div class="range-row">
+              <input type="number" id="budget-min" value="10000" step="1000" min="0">
+              <span>to</span>
+              <input type="number" id="budget-max" value="50000" step="1000" min="0">
+            </div>
+          </label>
+          <label>Miles per year
+            <input type="number" id="annual-miles" value="12000" step="1000" min="1000">
+          </label>
+          <label>Years you will keep it
+            <input type="number" id="hold-years" value="5" min="1" max="15">
+          </label>
+          <label>Oldest model year
+            <input type="number" id="year-min" value="2015" min="2013" max="2023">
+          </label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn ghost" data-back="3">Back</button>
+          <button class="btn primary" id="run-discovery">Analyse my options</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="sidenote">
+      Already looking at a specific car?
+      <button class="linkbtn inline" data-goto="lookup">Check that one instead &rarr;</button>
+    </p>
+  </section>
+
+  <!-- ============ results ============ -->
+  <section id="view-results" class="view">
+    <button class="linkbtn back" data-goto="start">&larr; Start over</button>
+    <div id="results-head"></div>
+    <div id="results-list" class="results"></div>
+    <div id="usage-box"></div>
+  </section>
+
+  <!-- ============ specific car lookup ============ -->
+  <section id="view-lookup" class="view">
+    <button class="linkbtn back" data-goto="start">&larr; Back</button>
+    <div class="card">
+      <h2>Check a specific car</h2>
+      <p class="hint">
+        This is the precise path. Enter the asking price of the car you are
+        actually looking at and we work from that rather than from an estimate.
+      </p>
+      <div class="grid2">
+        <label>Year <input type="number" id="lk-year" value="2018" min="2013" max="2023"></label>
+        <label>Make
+          <select id="lk-make"></select>
+        </label>
+        <label>Model
+          <select id="lk-model"><option value="">pick a make first</option></select>
+        </label>
+        <label>Mileage <input type="number" id="lk-mileage" value="78000" step="1000" min="0"></label>
+        <label>Asking price <input type="number" id="lk-price" placeholder="optional" step="500" min="0"></label>
+        <label>VIN <input type="text" id="lk-vin" placeholder="optional - gives exact MSRP" maxlength="17"></label>
+        <label>Miles per year <input type="number" id="lk-annual" value="12000" step="1000"></label>
+        <label>Years you will keep it <input type="number" id="lk-hold" value="5" min="1" max="15"></label>
+      </div>
+      <div class="panel-actions">
+        <button class="btn primary" id="run-dossier">Build the dossier</button>
+      </div>
+    </div>
+    <div id="dossier-out"></div>
+  </section>
+
+</main>
+
+<!-- loading overlay -->
+<div id="loading" class="loading">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <p id="loading-msg">Working...</p>
+    <ul class="agent-trace" id="agent-trace"></ul>
+  </div>
+</div>
+
+<!-- methodology drawer -->
+<div id="method-drawer" class="drawer">
+  <div class="drawer-inner">
+    <button class="drawer-close" id="method-close">&times;</button>
+    <h2>How it works</h2>
+    <div id="method-body"></div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>
+      Built for Yale SOM MGT 409. Data from NHTSA, EPA fueleconomy.gov and AAA.
+      Estimates, not appraisals &mdash; always get a pre-purchase inspection.
+    </p>
+  </div>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

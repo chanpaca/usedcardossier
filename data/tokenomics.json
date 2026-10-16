@@ -1,0 +1,327 @@
+{
+  "measured_at": "2026-10-16",
+  "runs": [
+    {
+      "flow": "dossier",
+      "label": "2018 Honda Accord",
+      "wall_s": 15.51,
+      "usage": {
+        "calls": [
+          {
+            "agent": "dossier",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 1758,
+            "completion_tokens": 1169,
+            "latency_s": 3.929,
+            "cached": false,
+            "cost_usd": 0.000965
+          },
+          {
+            "agent": "analyst",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 711,
+            "completion_tokens": 477,
+            "latency_s": 0.445,
+            "cached": false,
+            "cost_usd": 0.000393
+          },
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2921,
+            "completion_tokens": 785,
+            "latency_s": 0.533,
+            "cached": false,
+            "cost_usd": 0.000909
+          }
+        ],
+        "prompt_tokens": 5390,
+        "completion_tokens": 2431,
+        "total_tokens": 7821,
+        "total_cost_usd": 0.002267,
+        "call_count": 3
+      },
+      "by_agent": {
+        "dossier": {
+          "calls": 1,
+          "prompt": 1758,
+          "completion": 1169,
+          "latency": 3.929,
+          "cost": 0.000965
+        },
+        "analyst": {
+          "calls": 1,
+          "prompt": 711,
+          "completion": 477,
+          "latency": 0.445,
+          "cost": 0.000393
+        },
+        "critic": {
+          "calls": 1,
+          "prompt": 2921,
+          "completion": 785,
+          "latency": 0.533,
+          "cost": 0.000909
+        }
+      },
+      "critic_verdict": "pass",
+      "critic_issues": 0,
+      "critic_checked": 27
+    },
+    {
+      "flow": "dossier",
+      "label": "2018 Toyota Camry",
+      "wall_s": 9.66,
+      "usage": {
+        "calls": [
+          {
+            "agent": "dossier",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 1648,
+            "completion_tokens": 1248,
+            "latency_s": 0.546,
+            "cached": false,
+            "cost_usd": 0.000996
+          },
+          {
+            "agent": "analyst",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 712,
+            "completion_tokens": 721,
+            "latency_s": 0.479,
+            "cached": false,
+            "cost_usd": 0.000539
+          },
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2924,
+            "completion_tokens": 1805,
+            "latency_s": 0.623,
+            "cached": false,
+            "cost_usd": 0.001522
+          }
+        ],
+        "prompt_tokens": 5284,
+        "completion_tokens": 3774,
+        "total_tokens": 9058,
+        "total_cost_usd": 0.003057,
+        "call_count": 3
+      },
+      "by_agent": {
+        "dossier": {
+          "calls": 1,
+          "prompt": 1648,
+          "completion": 1248,
+          "latency": 0.546,
+          "cost": 0.000996
+        },
+        "analyst": {
+          "calls": 1,
+          "prompt": 712,
+          "completion": 721,
+          "latency": 0.479,
+          "cost": 0.000539
+        },
+        "critic": {
+          "calls": 1,
+          "prompt": 2924,
+          "completion": 1805,
+          "latency": 0.623,
+          "cost": 0.001522
+        }
+      },
+      "critic_verdict": "revise",
+      "critic_issues": 2,
+      "critic_checked": 34
+    },
+    {
+      "flow": "dossier",
+      "label": "2017 Ford F150 Pickup 4WD",
+      "wall_s": 41.07,
+      "usage": {
+        "calls": [
+          {
+            "agent": "dossier",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 1348,
+            "completion_tokens": 1962,
+            "latency_s": 16.394,
+            "cached": false,
+            "cost_usd": 0.001379
+          },
+          {
+            "agent": "analyst",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 716,
+            "completion_tokens": 815,
+            "latency_s": 7.442,
+            "cached": false,
+            "cost_usd": 0.000596
+          },
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2644,
+            "completion_tokens": 1202,
+            "latency_s": 11.556,
+            "cached": false,
+            "cost_usd": 0.001118
+          }
+        ],
+        "prompt_tokens": 4708,
+        "completion_tokens": 3979,
+        "total_tokens": 8687,
+        "total_cost_usd": 0.003094,
+        "call_count": 3
+      },
+      "by_agent": {
+        "dossier": {
+          "calls": 1,
+          "prompt": 1348,
+          "completion": 1962,
+          "latency": 16.394,
+          "cost": 0.001379
+        },
+        "analyst": {
+          "calls": 1,
+          "prompt": 716,
+          "completion": 815,
+          "latency": 7.442,
+          "cost": 0.000596
+        },
+        "critic": {
+          "calls": 1,
+          "prompt": 2644,
+          "completion": 1202,
+          "latency": 11.556,
+          "cost": 0.001118
+        }
+      },
+      "critic_verdict": "pass",
+      "critic_issues": 0,
+      "critic_checked": 31
+    },
+    {
+      "flow": "discovery",
+      "label": "sedan / reliability,running_cost",
+      "wall_s": 68.94,
+      "usage": {
+        "calls": [
+          {
+            "agent": "profiler",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 375,
+            "completion_tokens": 159,
+            "latency_s": 0.699,
+            "cached": false,
+            "cost_usd": 0.000152
+          },
+          {
+            "agent": "scout",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 874,
+            "completion_tokens": 481,
+            "latency_s": 1.66,
+            "cached": false,
+            "cost_usd": 0.00042
+          }
+        ],
+        "prompt_tokens": 1249,
+        "completion_tokens": 640,
+        "total_tokens": 1889,
+        "total_cost_usd": 0.000571,
+        "call_count": 2
+      },
+      "by_agent": {
+        "profiler": {
+          "calls": 1,
+          "prompt": 375,
+          "completion": 159,
+          "latency": 0.699,
+          "cost": 0.000152
+        },
+        "scout": {
+          "calls": 1,
+          "prompt": 874,
+          "completion": 481,
+          "latency": 1.66,
+          "cost": 0.00042
+        }
+      },
+      "results_returned": 6,
+      "filtered_from": 306
+    },
+    {
+      "flow": "discovery",
+      "label": "suv / safety,comfort",
+      "wall_s": 34.3,
+      "usage": {
+        "calls": [
+          {
+            "agent": "profiler",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 365,
+            "completion_tokens": 236,
+            "latency_s": 0.484,
+            "cached": false,
+            "cost_usd": 0.000196
+          },
+          {
+            "agent": "scout",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 1025,
+            "completion_tokens": 793,
+            "latency_s": 0.58,
+            "cached": false,
+            "cost_usd": 0.00063
+          }
+        ],
+        "prompt_tokens": 1390,
+        "completion_tokens": 1029,
+        "total_tokens": 2419,
+        "total_cost_usd": 0.000826,
+        "call_count": 2
+      },
+      "by_agent": {
+        "profiler": {
+          "calls": 1,
+          "prompt": 365,
+          "completion": 236,
+          "latency": 0.484,
+          "cost": 0.000196
+        },
+        "scout": {
+          "calls": 1,
+          "prompt": 1025,
+          "completion": 793,
+          "latency": 0.58,
+          "cost": 0.00063
+        }
+      },
+      "results_returned": 8,
+      "filtered_from": 1536
+    }
+  ],
+  "per_flow": {
+    "dossier": {
+      "n": 3,
+      "mean_cost_usd": 0.002806,
+      "mean_tokens": 8522,
+      "mean_wall_s": 22.08
+    },
+    "discovery": {
+      "n": 2,
+      "mean_cost_usd": 0.000699,
+      "mean_tokens": 2154,
+      "mean_wall_s": 51.62
+    }
+  },
+  "session": {
+    "definition": "1 discovery + 3 dossiers",
+    "cost_usd": 0.009117,
+    "at_100_users": 0.91,
+    "at_10k_users": 91.17,
+    "at_10k_users_monthly_2_sessions": 182.34
+  }
+}

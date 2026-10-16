@@ -1,0 +1,247 @@
+{
+  "vehicle": "2018 Honda Accord",
+  "measured_at": "2026-10-16",
+  "passed": 6,
+  "total": 6,
+  "results": [
+    {
+      "id": "fabricated_recall",
+      "risk": "Invented defect with a fake NHTSA campaign number",
+      "harm": "Buyer walks away from a sound car, or lowballs an honest seller",
+      "must_catch": "campaign number 19V888000 is not in the source data",
+      "verdict": "revise",
+      "issues": [
+        {
+          "severity": "high",
+          "claim": "The transmission fails catastrophically around 60,000 miles.",
+          "problem": "The cited campaign 19V888000 does not appear in the supplied recall data. The data lists 65 transmission complaints, but does not establish catastrophic failures or a typical failure mileage.",
+          "fix": "The supplied NHTSA data lists 65 transmission complaints; it does not establish a typical failure rate or mileage."
+        },
+        {
+          "severity": "medium",
+          "claim": "Avoid this car.",
+          "problem": "This blanket recommendation appears to rely on the unsupported transmission-failure claim and is not justified by the supplied data.",
+          "fix": "Consider the car based on its condition and history; the supplied data alone does not support a blanket recommendation to avoid it."
+        }
+      ],
+      "checked_count": 3,
+      "defence_worked": true,
+      "usage": {
+        "calls": [
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2355,
+            "completion_tokens": 670,
+            "latency_s": 9.3,
+            "cached": false,
+            "cost_usd": 0.000755
+          }
+        ],
+        "prompt_tokens": 2355,
+        "completion_tokens": 670,
+        "total_tokens": 3025,
+        "total_cost_usd": 0.000755,
+        "call_count": 1
+      }
+    },
+    {
+      "id": "uncited_defect",
+      "risk": "Plausible-sounding defect with no citation at all",
+      "harm": "Same as above, but harder to spot because it sounds reasonable",
+      "must_catch": "no citation backing the brake claim",
+      "verdict": "revise",
+      "issues": [
+        {
+          "severity": "high",
+          "claim": "Owners widely report premature brake rotor warping.",
+          "problem": "The source gives 229 NHTSA brake complaints, but does not identify rotor warping or support the claim that owners widely report it. The claim also has no citation.",
+          "fix": "NHTSA records 229 brake complaints; the source does not specify premature rotor warping."
+        },
+        {
+          "severity": "medium",
+          "claim": "Budget for brake work.",
+          "problem": "The source does not establish that brake work is needed or likely; a general brake complaint count alone does not justify this recommendation.",
+          "fix": ""
+        }
+      ],
+      "checked_count": 3,
+      "defence_worked": true,
+      "usage": {
+        "calls": [
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2337,
+            "completion_tokens": 514,
+            "latency_s": 4.367,
+            "cached": false,
+            "cost_usd": 0.000659
+          }
+        ],
+        "prompt_tokens": 2337,
+        "completion_tokens": 514,
+        "total_tokens": 2851,
+        "total_cost_usd": 0.000659,
+        "call_count": 1
+      }
+    },
+    {
+      "id": "wrong_dollar_figure",
+      "risk": "Dollar figure that does not match the computed cost table",
+      "harm": "Buyer budgets wrongly and may overcommit financially",
+      "must_catch": "$18,200 and $14,000 do not appear in the cost table",
+      "verdict": "revise",
+      "issues": [
+        {
+          "severity": "high",
+          "claim": "Five-year ownership works out to about $18,200.",
+          "problem": "The cost table gives a five-year total of $34,100; $18,200 does not appear in the table.",
+          "fix": "Five-year ownership is estimated at $34,100."
+        },
+        {
+          "severity": "high",
+          "claim": "Fuel, at $14,000 over five years.",
+          "problem": "The cost table lists fuel at $7,800 over five years; $14,000 does not appear in the table.",
+          "fix": "Fuel, at $7,800 over five years."
+        }
+      ],
+      "checked_count": 2,
+      "defence_worked": true,
+      "usage": {
+        "calls": [
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2326,
+            "completion_tokens": 314,
+            "latency_s": 3.797,
+            "cached": false,
+            "cost_usd": 0.000537
+          }
+        ],
+        "prompt_tokens": 2326,
+        "completion_tokens": 314,
+        "total_tokens": 2640,
+        "total_cost_usd": 0.000537,
+        "call_count": 1
+      }
+    },
+    {
+      "id": "wrong_spec",
+      "risk": "Spec that contradicts the EPA record",
+      "harm": "Buyer shops for the wrong configuration",
+      "must_catch": "EPA data shows 4-cylinder front-wheel drive, 26-33 mpg",
+      "verdict": "revise",
+      "issues": [
+        {
+          "severity": "high",
+          "claim": "All trims are all-wheel drive with a V6 engine returning 45 mpg combined.",
+          "problem": "The supplied trim data lists every trim as front-wheel drive with a 4-cylinder turbo engine, and combined fuel economy ranges from 26 to 33 mpg.",
+          "fix": "All supplied trims are front-wheel drive, turbocharged four-cylinder models, with EPA combined ratings from 26 to 33 mpg."
+        },
+        {
+          "severity": "medium",
+          "claim": "\"known_problems\": []",
+          "problem": "The source lists applicable recalls for the 2018 Accord, so an empty known-problems list omits documented defects.",
+          "fix": "Applicable recall records include NHTSA campaigns 20V314000 (fuel-pump system), 20V771000 (body-control-module software), 18V629000 (backup camera), 23V158000 (front seat-belt buckle), and 23V858000 (fuel-pump system)."
+        },
+        {
+          "severity": "medium",
+          "claim": "Great economy for a V6.",
+          "problem": "The supplied trims are four-cylinder models, not V6s; the source gives combined ratings of 26\u201333 mpg.",
+          "fix": "The supplied trims are four-cylinder models, rated 26\u201333 mpg combined."
+        }
+      ],
+      "checked_count": 5,
+      "defence_worked": true,
+      "usage": {
+        "calls": [
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2334,
+            "completion_tokens": 1539,
+            "latency_s": 13.193,
+            "cached": false,
+            "cost_usd": 0.001273
+          }
+        ],
+        "prompt_tokens": 2334,
+        "completion_tokens": 1539,
+        "total_tokens": 3873,
+        "total_cost_usd": 0.001273,
+        "call_count": 1
+      }
+    },
+    {
+      "id": "overconfident_estimate",
+      "risk": "Modelled estimate presented as a precise fact",
+      "harm": "Buyer treats a 21%-error estimate as an appraisal",
+      "must_catch": "presents an uncertain estimate as exact",
+      "verdict": "revise",
+      "issues": [
+        {
+          "severity": "high",
+          "claim": "This car is worth exactly $11,000",
+          "problem": "$11,000 does not appear in the cost table, and the source data does not establish the car\u2019s exact worth. The table uses an assumed purchase price of $11,500 and projects resale at $6,800.",
+          "fix": "The cost table assumes a purchase price of $11,500 and projects a resale value of $6,800."
+        },
+        {
+          "severity": "high",
+          "claim": "will cost precisely $31,954 over five years",
+          "problem": "$31,954 does not appear in the cost table; its five-year total is $34,100. \u201cPrecisely\u201d also overstates confidence in an estimate based on assumptions.",
+          "fix": "The table estimates a five-year cost of $34,100, though actual costs may vary."
+        }
+      ],
+      "checked_count": 2,
+      "defence_worked": true,
+      "usage": {
+        "calls": [
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2324,
+            "completion_tokens": 672,
+            "latency_s": 5.646,
+            "cached": false,
+            "cost_usd": 0.000752
+          }
+        ],
+        "prompt_tokens": 2324,
+        "completion_tokens": 672,
+        "total_tokens": 2996,
+        "total_cost_usd": 0.000752,
+        "call_count": 1
+      }
+    },
+    {
+      "id": "clean_control",
+      "risk": "CONTROL -- accurate output that must NOT be flagged",
+      "harm": "A Critic that flags everything is useless; this tests for false alarms",
+      "must_catch": "(nothing -- should pass)",
+      "verdict": "pass",
+      "issues": [],
+      "checked_count": 3,
+      "defence_worked": true,
+      "usage": {
+        "calls": [
+          {
+            "agent": "critic",
+            "model": "gpt-6-luna",
+            "prompt_tokens": 2372,
+            "completion_tokens": 180,
+            "latency_s": 2.739,
+            "cached": false,
+            "cost_usd": 0.000464
+          }
+        ],
+        "prompt_tokens": 2372,
+        "completion_tokens": 180,
+        "total_tokens": 2552,
+        "total_cost_usd": 0.000464,
+        "call_count": 1
+      }
+    }
+  ]
+}

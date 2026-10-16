@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UsedCarDossier &mdash; MGT 409</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+:root{
+  --ink:#15191f; --ink2:#3c4654; --ink3:#6c7786;
+  --accent:#1a5fd0; --accent-bg:#eef4fd;
+  --good:#0f7a4d; --good-bg:#e8f6ef;
+  --bad:#b3261e; --bad-bg:#fdeceb;
+  --warn:#9a5b00; --warn-bg:#fdf4e4;
+  --line:#dfe4ea;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+.reveal{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
+        color:var(--ink);font-size:30px}
+.reveal h1,.reveal h2,.reveal h3{
+  font-weight:700;letter-spacing:-.025em;text-transform:none;color:var(--ink)}
+.reveal h1{font-size:1.9em;line-height:1.1}
+.reveal h2{font-size:1.25em;margin-bottom:.5em}
+.reveal h3{font-size:.8em;color:var(--ink3);font-weight:600;
+           text-transform:uppercase;letter-spacing:.07em;margin-bottom:.8em}
+.reveal section{text-align:left}
+.reveal p,.reveal li{line-height:1.45}
+.reveal strong{color:var(--accent)}
+.reveal em{font-style:normal;background:var(--accent-bg);padding:0 .2em;border-radius:3px}
+
+.reveal .lead{font-size:.82em;color:var(--ink2)}
+.reveal .tiny{font-size:.5em;color:var(--ink3)}
+.reveal .mono{font-family:var(--mono)}
+
+.reveal table{font-size:.52em;border-collapse:collapse;width:100%;margin:.5em 0}
+.reveal table th{text-align:left;font-size:.82em;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--ink3);border-bottom:2px solid var(--line);padding:.4em .5em}
+.reveal table td{padding:.42em .5em;border-bottom:1px solid #eef1f4}
+.reveal table td.num{text-align:right;font-family:var(--mono);white-space:nowrap}
+.reveal table tr.hl td{background:var(--good-bg);font-weight:600}
+.reveal table tr.hlbad td{background:var(--bad-bg)}
+.reveal table tr.total td{border-top:2px solid var(--ink);font-weight:700}
+
+.kpis{display:flex;gap:1.1em;margin:.7em 0}
+.kpi{flex:1;background:#fafbfc;border:1px solid var(--line);border-radius:10px;
+     padding:.6em .7em;text-align:center}
+.kpi .v{display:block;font-family:var(--mono);font-size:1.25em;font-weight:700;
+        color:var(--accent);line-height:1.15}
+.kpi .l{display:block;font-size:.4em;color:var(--ink3);text-transform:uppercase;
+        letter-spacing:.05em;margin-top:.2em}
+
+.box{border-left:5px solid var(--line);padding:.5em .8em;margin:.5em 0;
+     border-radius:0 8px 8px 0;font-size:.68em}
+.box.good{border-color:var(--good);background:var(--good-bg)}
+.box.bad{border-color:var(--bad);background:var(--bad-bg)}
+.box.warn{border-color:var(--warn);background:var(--warn-bg)}
+.box.key{border-color:var(--accent);background:var(--accent-bg)}
+
+.cols{display:flex;gap:1.2em}
+.cols>div{flex:1}
+
+.pill{display:inline-block;font-size:.75em;font-weight:700;padding:.08em .5em;
+      border-radius:10px;background:#eef1f4;color:var(--ink3)}
+.pill.good{background:var(--good-bg);color:var(--good)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+
+.reveal .slide-number{font-size:14px}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 -->
+<section data-background-color="#ffffff">
+  <h1>Every site tells you<br><em>which</em> used car to buy.</h1>
+  <h1 style="margin-top:.2em">None tell you what<br>it will <em>cost</em> you.</h1>
+  <p class="lead" style="margin-top:1em">
+    <strong>UsedCarDossier</strong> &middot; MGT 409, AI Foundations for Managers
+  </p>
+  <p class="tiny">Yale School of Management &middot; October 2026</p>
+</section>
+
+<!-- 2 -->
+<section>
+  <h3>The problem</h3>
+  <h2>The sticker price is the least<br>informative number in the deal</h2>
+
+  <div class="kpis">
+    <div class="kpi"><span class="v">$11,500</span><span class="l">what you pay</span></div>
+    <div class="kpi"><span class="v">$34,100</span><span class="l">what it costs you</span></div>
+    <div class="kpi"><span class="v">3&times;</span><span class="l">the gap</span></div>
+  </div>
+
+  <p class="lead">2018 Honda Accord LX, 78,000 miles. The purchase price is under a
+    third of the real cost &mdash; and no mainstream site shows the other two thirds.</p>
+
+  <p class="tiny">36 million used cars change hands in the US each year.
+    Second-largest purchase most households make.</p>
+</section>
+
+<!-- 3 -->
+<section>
+  <h3>The gap nobody fills</h3>
+  <h2>$2,750 hides <em>inside one model year</em></h2>
+
+  <table>
+    <thead><tr><th>2018 Accord trim</th><th class="num">MPG</th>
+      <th class="num">Fuel / yr</th><th class="num">5-year fuel</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td>1.5L turbo, CVT</td><td class="num">33</td>
+        <td class="num">$1,950</td><td class="num">$9,750</td></tr>
+      <tr><td>1.5L turbo, 7-spd auto</td><td class="num">31</td>
+        <td class="num">$2,100</td><td class="num">$10,500</td></tr>
+      <tr><td>2.0L turbo, 10-spd auto</td><td class="num">27</td>
+        <td class="num">$2,400</td><td class="num">$12,000</td></tr>
+      <tr class="hlbad"><td>2.0L turbo, 6-spd manual</td><td class="num">26</td>
+        <td class="num">$2,500</td><td class="num">$12,500</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box key">
+    Pick the wrong trim on styling grounds and you pay <strong>$2,750</strong> extra
+    &mdash; a quarter of the purchase price, decided by a line on a window sticker
+    that no shopping funnel asks about.
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <h3>The design decision</h3>
+  <h2>Python decides and calculates.<br>Agents explain and check.</h2>
+
+  <svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" style="width:100%"
+       font-family="-apple-system,Segoe UI,sans-serif">
+    <defs><marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#6c7786"/></marker></defs>
+
+    <rect x="8" y="10" width="178" height="150" rx="9" fill="#eef4fd" stroke="#1a5fd0" stroke-width="1.5"/>
+    <text x="97" y="34" font-size="14" font-weight="700" fill="#1a5fd0" text-anchor="middle">FREE GOV DATA</text>
+    <text x="97" y="50" font-size="10" fill="#6c7786" text-anchor="middle">zero API keys</text>
+    <text x="22" y="74" font-size="12">NHTSA vPIC &rarr; MSRP</text>
+    <text x="22" y="95" font-size="12">NHTSA recalls</text>
+    <text x="22" y="116" font-size="12">NHTSA complaints</text>
+    <text x="22" y="137" font-size="12">EPA fueleconomy</text>
+    <text x="22" y="155" font-size="12">AAA cost basis</text>
+
+    <rect x="8" y="176" width="178" height="118" rx="9" fill="#e8f6ef" stroke="#0f7a4d" stroke-width="1.5"/>
+    <text x="97" y="200" font-size="14" font-weight="700" fill="#0f7a4d" text-anchor="middle">PYTHON CORE</text>
+    <text x="97" y="216" font-size="10" fill="#6c7786" text-anchor="middle">no LLM here</text>
+    <text x="22" y="240" font-size="12">hard filter</text>
+    <text x="22" y="260" font-size="12">value model</text>
+    <text x="22" y="280" font-size="12">5-year cost</text>
+
+    <rect x="238" y="20" width="172" height="52" rx="8" fill="#fff" stroke="#3c4654" stroke-width="1.4"/>
+    <text x="324" y="43" font-size="14" font-weight="700" text-anchor="middle">1 Profiler</text>
+    <text x="324" y="60" font-size="10" fill="#6c7786" text-anchor="middle">priorities &rarr; weights</text>
+
+    <rect x="238" y="88" width="172" height="52" rx="8" fill="#fff" stroke="#3c4654" stroke-width="1.4"/>
+    <text x="324" y="111" font-size="14" font-weight="700" text-anchor="middle">2 Scout</text>
+    <text x="324" y="128" font-size="10" fill="#6c7786" text-anchor="middle">explains shortlist</text>
+
+    <rect x="238" y="156" width="172" height="52" rx="8" fill="#fff" stroke="#3c4654" stroke-width="1.4"/>
+    <text x="324" y="179" font-size="14" font-weight="700" text-anchor="middle">3 Dossier</text>
+    <text x="324" y="196" font-size="10" fill="#6c7786" text-anchor="middle">trims + defects</text>
+
+    <rect x="238" y="224" width="172" height="52" rx="8" fill="#fff" stroke="#3c4654" stroke-width="1.4"/>
+    <text x="324" y="247" font-size="14" font-weight="700" text-anchor="middle">4 Analyst</text>
+    <text x="324" y="264" font-size="10" fill="#6c7786" text-anchor="middle">reads cost table</text>
+
+    <rect x="470" y="110" width="190" height="96" rx="9" fill="#fdeceb" stroke="#b3261e" stroke-width="2"/>
+    <text x="565" y="140" font-size="15" font-weight="700" fill="#b3261e" text-anchor="middle">5 Critic</text>
+    <text x="565" y="160" font-size="10.5" fill="#6c7786" text-anchor="middle">re-checks every claim</text>
+    <text x="565" y="176" font-size="10.5" fill="#6c7786" text-anchor="middle">against raw records</text>
+    <text x="565" y="195" font-size="11" font-weight="700" fill="#b3261e" text-anchor="middle">6/6 attacks caught</text>
+
+    <rect x="714" y="126" width="172" height="64" rx="9" fill="#fafbfc" stroke="#dfe4ea"/>
+    <text x="800" y="153" font-size="14" font-weight="700" text-anchor="middle">BUYER</text>
+    <text x="800" y="172" font-size="10.5" fill="#6c7786" text-anchor="middle">cited, costed answer</text>
+
+    <line x1="186" y1="80"  x2="234" y2="48"  stroke="#6c7786" marker-end="url(#a)"/>
+    <line x1="186" y1="230" x2="234" y2="182" stroke="#6c7786" marker-end="url(#a)"/>
+    <line x1="186" y1="245" x2="234" y2="250" stroke="#6c7786" marker-end="url(#a)"/>
+    <line x1="410" y1="120" x2="466" y2="145" stroke="#6c7786" marker-end="url(#a)"/>
+    <line x1="410" y1="192" x2="466" y2="166" stroke="#6c7786" marker-end="url(#a)"/>
+    <line x1="660" y1="158" x2="710" y2="158" stroke="#6c7786" marker-end="url(#a)"/>
+    <line x1="186" y1="290" x2="470" y2="290" stroke="#b3261e" stroke-dasharray="4 3"/>
+    <line x1="470" y1="290" x2="565" y2="290" stroke="#b3261e" stroke-dasharray="4 3"/>
+    <line x1="565" y1="290" x2="565" y2="210" stroke="#b3261e" stroke-dasharray="4 3" marker-end="url(#a)"/>
+    <text x="300" y="283" font-size="10" fill="#b3261e">ground truth, so it can detect a fabrication</text>
+  </svg>
+
+  <p class="tiny">A model never asked to do arithmetic cannot get the arithmetic wrong.</p>
+</section>
+
+<!-- 5 -->
+<section>
+  <h3>Demo</h3>
+  <h2>Where $34,100 actually goes</h2>
+
+  <table>
+    <thead><tr><th>2018 Accord, $11,500, 12k mi/yr</th>
+      <th class="num">Per year</th><th class="num">5 years</th></tr></thead>
+    <tbody>
+      <tr><td>Depreciation <span class="pill">modelled</span></td>
+        <td class="num">$940</td><td class="num">$4,700</td></tr>
+      <tr><td>Fuel <span class="pill good">EPA, exact</span></td>
+        <td class="num">$1,560</td><td class="num">$7,800</td></tr>
+      <tr class="hlbad"><td>Maintenance, repair, tires</td>
+        <td class="num">$2,575</td><td class="num">$12,877</td></tr>
+      <tr><td>Insurance</td><td class="num">$932</td><td class="num">$4,658</td></tr>
+      <tr><td>Registration and taxes</td><td class="num">$813</td><td class="num">$4,065</td></tr>
+      <tr class="total"><td>Total cost of ownership</td>
+        <td class="num">$6,820</td><td class="num">$34,100</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box bad">
+    <strong>Maintenance alone ($12,877) EXCEEDS the purchase price ($11,500).</strong>
+    Every line shows the exact basis it was computed from.
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <h3>The method that makes it work</h3>
+  <h2>Complaint <em>counts</em> measure popularity.<br>Complaint <em>shares</em> measure quality.</h2>
+
+  <table>
+    <thead><tr><th>2018 midsize sedan</th><th class="num">Complaints</th>
+      <th class="num">Engine share</th><th class="num">vs segment</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td>Honda Accord</td><td class="num">1,890</td>
+        <td class="num">13.2%</td><td class="num">0.88&times;</td></tr>
+      <tr class="hl"><td>Toyota Camry</td><td class="num">748</td>
+        <td class="num">4.7%</td><td class="num">0.31&times;</td></tr>
+      <tr class="hlbad"><td>Hyundai Sonata</td><td class="num">374</td>
+        <td class="num">31.8%</td><td class="num">2.12&times;</td></tr>
+      <tr class="hlbad"><td>Kia Optima</td><td class="num">232</td>
+        <td class="num">37.5%</td><td class="num">2.50&times;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box good">
+    Our first method ranked on raw counts and penalised the Accord <strong>for being
+    popular</strong>. Switching to share inverts the result &mdash; and independently
+    surfaces the <strong>Hyundai/Kia Theta II engine failure</strong> episode from
+    public data, without being told to look for it.
+  </div>
+</section>
+
+<!-- 7 -->
+<section>
+  <h3>Safety</h3>
+  <h2>We attacked it on purpose</h2>
+
+  <table>
+    <thead><tr><th>Injected into the output</th><th>Critic</th></tr></thead>
+    <tbody>
+      <tr><td>Fake recall <span class="mono">NHTSA 19V888000</span></td>
+        <td><span class="pill good">CAUGHT</span></td></tr>
+      <tr><td>Plausible defect with no citation</td><td><span class="pill good">CAUGHT</span></td></tr>
+      <tr><td>Dollar figure not in the cost table</td><td><span class="pill good">CAUGHT</span></td></tr>
+      <tr><td>"All trims AWD V6, 45 mpg" (really FWD 4-cyl, 26&ndash;33)</td>
+        <td><span class="pill good">CAUGHT</span></td></tr>
+      <tr><td>"worth <em>exactly</em> $11,000"</td><td><span class="pill good">CAUGHT</span></td></tr>
+      <tr class="hl"><td><strong>Control: accurate output</strong></td>
+        <td><span class="pill good">NOT flagged</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box key">
+    <strong>6/6, for $0.004.</strong> The control is the one that matters: a Critic that
+    flags everything would score 5/5 on attacks and be useless. It also caught an
+    <em>omitted</em> real recall &mdash; a false negative, the more dangerous direction.
+  </div>
+</section>
+
+<!-- 8 -->
+<section>
+  <h3>Tokenomics</h3>
+  <h2>One cent to analyse four cars</h2>
+
+  <div class="cols">
+    <div>
+      <table>
+        <thead><tr><th>Agent</th><th class="num">Tokens</th><th class="num">Cost</th></tr></thead>
+        <tbody>
+          <tr><td>Dossier</td><td class="num">3,044</td><td class="num">$0.0011</td></tr>
+          <tr><td>Analyst</td><td class="num">1,384</td><td class="num">$0.0005</td></tr>
+          <tr class="hlbad"><td>Critic</td><td class="num">4,093</td><td class="num">$0.0012</td></tr>
+          <tr class="total"><td>Per dossier</td><td class="num">8,522</td><td class="num">$0.0028</td></tr>
+        </tbody>
+      </table>
+      <p class="tiny">Mean of 3 real runs. gpt-6-luna via Portkey.</p>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th>Scale</th><th class="num">LLM cost</th></tr></thead>
+        <tbody>
+          <tr><td>1 session</td><td class="num">$0.0091</td></tr>
+          <tr><td>100 users</td><td class="num">$0.91</td></tr>
+          <tr><td>10,000 users</td><td class="num">$91</td></tr>
+          <tr class="hl"><td>10k MAU, 2&times;/mo</td><td class="num">$182/mo</td></tr>
+        </tbody>
+      </table>
+      <p class="tiny">Session = 1 search + 3 dossiers.<br>
+        Vehicle data adds <strong>$0</strong> &mdash; all keyless government APIs.</p>
+    </div>
+  </div>
+
+  <div class="box">
+    <strong>The Critic is 42% of run cost and the largest prompt.</strong> That is the deliberate trade: half the
+    budget on verification, for an app whose output moves thousands of dollars.
+  </div>
+</section>
+
+<!-- 9 -->
+<section>
+  <h3>Impact</h3>
+  <h2>Does the number hold up?</h2>
+
+  <div class="box good">
+    <strong>Independent sanity check.</strong> AAA publishes <strong>66.37&cent;/mile</strong>
+    for a <em>new</em> medium sedan. We compute <strong>56.8&cent;/mile</strong> for an
+    eight-year-old used Accord &mdash; lower than new by a plausible margin, from a
+    completely separate calculation path.
+  </div>
+
+  <table>
+    <thead><tr><th>What the app surfaces</th><th class="num">Amount</th></tr></thead>
+    <tbody>
+      <tr><td>Fuel spread hidden inside one model year</td><td class="num">$2,750</td></tr>
+      <tr><td>Ownership cost vs purchase price</td><td class="num">$34,100 vs $11,500</td></tr>
+      <tr><td>Maintenance alone vs purchase price</td><td class="num">$12,877 vs $11,500</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box warn">
+    <strong>Stated honestly:</strong> user testing is not yet complete. These are computed
+    figures, not observed behaviour change. Testers are being recruited now.
+  </div>
+</section>
+
+<!-- 10 -->
+<section>
+  <h3>Limits and next</h3>
+  <h2>What I would not claim</h2>
+
+  <div class="cols">
+    <div>
+      <p style="font-size:.62em"><strong>Known weaknesses</strong></p>
+      <ul style="font-size:.56em">
+        <li>Price model has <strong>21% median error</strong> &mdash; published, not
+          buried. App shows a band, not a number.</li>
+        <li>The <span class="mono">1.35&times;</span> out-of-warranty multiplier is the
+          biggest judgement call, and it is an assumption.</li>
+        <li>Share-based risk cannot see a defect an entire segment shares.</li>
+        <li>The Critic is itself an LLM: a strong filter, not a proof.</li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-size:.62em"><strong>Next, in order</strong></p>
+      <ol style="font-size:.56em">
+        <li>Finish user testing.</li>
+        <li>Discount defects already remedied free under recall.</li>
+        <li>Cache dossiers per vehicle &mdash; collapses marginal cost.</li>
+        <li>Widen the depreciation fit beyond 581 listings.</li>
+        <li>VIN-level recall matching.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="box key" style="margin-top:.6em">
+    <strong>UsedCarDossier</strong> &mdash; five free government data sources, zero API
+    keys for vehicle data, every claim cited and machine-checked.
+  </div>
+</section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true, slideNumber: 'c/t', transition: 'slide',
+  width: 1280, height: 760, margin: 0.06,
+});
+</script>
+</body>
+</html>
