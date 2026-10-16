@@ -88,10 +88,24 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
        font-size:.82rem;color:var(--ink3)}
 
 @media print{
-  body{max-width:none;padding:0;font-size:10.5pt}
-  h2{page-break-after:avoid} figure,table,.callout{page-break-inside:avoid}
+  body{max-width:none;padding:0;font-size:9.5pt;line-height:1.5}
+  h1{font-size:19pt} h2{font-size:13pt;margin:1.3rem 0 .5rem;page-break-after:avoid}
+  h3{font-size:10.5pt;margin:1rem 0 .3rem} h4{font-size:9.5pt;margin:.7rem 0 .25rem}
+  p{margin:.45rem 0}
+  figure,table,.callout,.kpis{page-break-inside:avoid}
+  figure{margin:.7rem 0}
+  /* Screenshots are tall; cap them so one does not eat a whole page. */
+  .shot{max-height:4.1in;width:auto;max-width:100%;object-fit:contain;
+        object-position:top left}
+  .diagram{max-height:3.6in}
+  table{font-size:8pt;margin:.5rem 0} td{padding:.3rem .4rem} th{padding:.3rem .4rem}
+  .callout{padding:.5rem .8rem;margin:.6rem 0;font-size:9pt}
+  .kpis{padding:.5rem .8rem;margin:.6rem 0;gap:1.1rem}
+  .toc{display:none}
+  li{margin:.15rem 0}
   a{color:var(--ink);text-decoration:none}
-  pre{font-size:7.5pt}
+  pre{font-size:7pt}
+  footer{margin-top:1.2rem;font-size:8pt}
 }
 </style>
 </head>
@@ -142,7 +156,7 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
 
 <div class="callout key">
   <p><strong>The gap in one line.</strong> A 2018 Honda Accord LX with 78,000 miles
-  sells for about $11,000. Owning it for five years costs <strong>$34,100</strong>.
+  sells for about $11,500. Owning it for five years costs <strong>$34,100</strong>.
   The purchase price is under a third of the real cost, and no mainstream site
   shows the buyer the other two thirds.</p>
 </div>

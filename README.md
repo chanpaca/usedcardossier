@@ -3,9 +3,9 @@
 **What a used car will actually cost you, and what is actually wrong with it.**
 
 Every used-car site tells you *which* car to buy. None tell you what owning it
-costs. A $11,000 Honda Accord costs about **$36,000** to own for five years --
-and the difference between two trims of the same car can be $2,750 in fuel
-alone.
+costs. An $11,500 Honda Accord costs **$34,100** to own for five years -- and
+$2,750 separates the cheapest and dearest trim of that same model year, in
+fuel alone.
 
 This app answers the question buyers actually have, using five free US
 government data sources and no API key for any of them.
@@ -195,7 +195,16 @@ data/
   msrp_reference.json      aggregate medians only
   cache/                   seeded HTTP cache
 scripts/
-  seed_catalog.py    rebuild the catalog
+  seed_catalog.py        rebuild the catalog from the live APIs
+  catalog_from_cache.py  rebuild it offline from the shipped cache (seconds)
+  fit_depreciation.py    refit the retention curve (offline, needs pandas)
+  measure_tokenomics.py  measure real token cost -> data/tokenomics.json
+  safety_tests.py        adversarial tests against the Critic
+  capture_screenshots.py regenerate report/images from a running app
+report/
+  report.html        the written report
+  slides.html        reveal.js deck
+  images/            screenshots, all from real runs
 ```
 
 ### Rebuilding the catalog
