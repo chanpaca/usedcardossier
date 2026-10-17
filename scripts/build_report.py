@@ -32,7 +32,7 @@ DIST = SRC / "dist"
 # and inlined here.
 CDN_TIMEOUT = 30
 
-REPO_URL = "https://github.com/chanpaca/campus-customs-final"
+REPO_URL = "https://github.com/chanpaca/usedcardossier"
 
 
 def inline_images(html: str, base: Path) -> tuple[str, int]:
