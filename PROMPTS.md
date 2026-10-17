@@ -292,3 +292,29 @@ clone 3s (40 MB) -> pip install 75s -> healthy server at 83s total -> real dossi
 (2018 Accord, MSRP $23,570 exact from VIN, 5yr $34,100, critic pass over 23 claims).
 No `.env` in the clone. 10-minute rule met with a ~7x margin.
 
+## 2026-10-17 — First outside user
+
+The app was used by its first outside user (a household member who has been through a US
+used-car purchase, not an enthusiast, no prior knowledge of the tool). Two reactions:
+
+1. More useful than expected -- but for understanding **the overall dynamics of the US
+   used-car market**, i.e. where the money goes over five years, rather than for picking
+   between cars.
+2. She asked whether I had known any of this **before buying our own car here**. I had not.
+
+The second remark is the stronger evidence and is written up as such: a household that has
+already completed a US used-car purchase recognised, from the output, that the purchase was
+made without that information. That is the claimed gap observed from outside rather than
+argued from data.
+
+It also relocated the product: the design assumed the job was COMPARISON; the first user's
+value came from COMPREHENSION. Recorded in the report as a finding, not a validation,
+because it was not the hypothesis going in.
+
+Written up honestly: n=1, qualitative, paraphrase not verbatim, no before/after dollar
+figure, no measured decision change. The outstanding stronger test is stated in-line.
+
+Report Impact section and slide 9 updated; slide 10 next-steps reworded from "finish user
+testing" to "quantify user testing". Rebuilt: report.pdf still 13 pages, slides still 10,
+dist still self-contained with zero failed requests.
+
