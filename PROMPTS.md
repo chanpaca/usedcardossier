@@ -282,3 +282,13 @@ Verified by copying both files into an empty directory and rendering:
 `report.html` 3.3 MB, 7 images, 0 broken, 0 failed requests, 0 console errors;
 `slides.html` 0.2 MB, 10 slides, 0 failed requests. **Submit the copies in `report/dist/`.**
 
+## 2026-10-16 — Pushed to GitHub
+
+Repo renamed by user to `usedcardossier`; links and remote updated, dist and PDF rebuilt.
+Pushed 9 commits to https://github.com/chanpaca/usedcardossier
+
+**Verified by cloning from GitHub into a clean directory:**
+clone 3s (40 MB) -> pip install 75s -> healthy server at 83s total -> real dossier in 22.5s
+(2018 Accord, MSRP $23,570 exact from VIN, 5yr $34,100, critic pass over 23 claims).
+No `.env` in the clone. 10-minute rule met with a ~7x margin.
+
