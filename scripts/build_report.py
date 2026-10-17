@@ -32,6 +32,8 @@ DIST = SRC / "dist"
 # and inlined here.
 CDN_TIMEOUT = 30
 
+REPO_URL = "https://github.com/chanpaca/campus-customs-final"
+
 
 def inline_images(html: str, base: Path) -> tuple[str, int]:
     count = 0
@@ -113,7 +115,7 @@ def build(name: str, do_cdn: bool) -> None:
     # The working copy links sideways to its sibling; in dist they sit
     # together, so the relative link still resolves.
     html = html.replace('href="../frontend/index.html"',
-                        'href="https://github.com/"')
+                        'href="%s"' % REPO_URL)
 
     DIST.mkdir(parents=True, exist_ok=True)
     out = DIST / name
