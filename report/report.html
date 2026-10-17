@@ -7,12 +7,14 @@
 <style>
 /* Self-contained. No external fonts, no CDN, no network. Prints cleanly. */
 :root{
-  --ink:#15191f; --ink2:#3c4654; --ink3:#6c7786;
-  --line:#dfe4ea; --line2:#eef1f4; --bg:#fff;
-  --accent:#1a5fd0; --accent-bg:#eef4fd;
-  --good:#0f7a4d; --good-bg:#e8f6ef;
-  --warn:#9a5b00; --warn-bg:#fdf4e4;
-  --bad:#b3261e;  --bad-bg:#fdeceb;
+  /* Yale palette: Yale Blue #00356B primary, blue-shifted inks, white page. */
+  --yale:#00356B; --yale-dark:#00254A; --yale-mid:#286DC0; --yale-light:#63AAFF;
+  --ink:#0c1b2e; --ink2:#33475f; --ink3:#65788e;
+  --line:#dbe3ec; --line2:#eaeff5; --bg:#fff;
+  --accent:#00356B; --accent-bg:#e7eff8;
+  --good:#15674a; --good-bg:#e4f2ec;
+  --warn:#8a5200; --warn-bg:#fdf2e0;
+  --bad:#9f2420;  --bad-bg:#fbeae9;
   --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
@@ -21,10 +23,13 @@ body{
   font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   color:var(--ink); background:var(--bg);
 }
-h1{font-size:2.1rem;line-height:1.2;letter-spacing:-.025em;margin:0 0 .4rem}
-h2{font-size:1.4rem;letter-spacing:-.015em;margin:2.8rem 0 .8rem;
-   padding-bottom:.4rem;border-bottom:2px solid var(--line)}
-h3{font-size:1.08rem;margin:1.8rem 0 .5rem}
+h1{font-size:2.2rem;line-height:1.18;letter-spacing:-.015em;margin:0 0 .4rem;
+   font-family:Georgia,'Times New Roman',serif;color:var(--yale-dark)}
+h2{font-size:1.42rem;letter-spacing:-.01em;margin:2.8rem 0 .8rem;
+   font-family:Georgia,'Times New Roman',serif;color:var(--yale-dark);
+   padding-bottom:.4rem;border-bottom:2px solid var(--yale)}
+h3{font-size:1.09rem;margin:1.8rem 0 .5rem;
+   font-family:Georgia,'Times New Roman',serif;color:var(--yale-dark)}
 h4{font-size:.95rem;margin:1.2rem 0 .4rem;color:var(--ink2)}
 p{margin:.7rem 0}
 a{color:var(--accent)}
@@ -42,10 +47,10 @@ pre code{background:none;padding:0}
 
 table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem}
 th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;
-   color:var(--ink3);border-bottom:2px solid var(--line);padding:.5rem .6rem}
+   color:var(--yale);border-bottom:2px solid var(--yale);padding:.5rem .6rem}
 td{padding:.55rem .6rem;border-bottom:1px solid var(--line2);vertical-align:top}
 td.num,th.num{text-align:right;font-family:var(--mono);white-space:nowrap}
-tr.total td{border-top:2px solid var(--ink);font-weight:700;border-bottom:0}
+tr.total td{border-top:2px solid var(--yale);font-weight:700;border-bottom:0;color:var(--yale-dark)}
 caption{caption-side:bottom;font-size:.78rem;color:var(--ink3);
         text-align:left;padding-top:.5rem}
 
@@ -287,8 +292,8 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
   </defs>
 
   <!-- data sources -->
-  <rect x="16" y="20" width="190" height="186" rx="8" fill="#eef4fd" stroke="#1a5fd0" stroke-width="1.2"/>
-  <text x="111" y="42" font-size="12.5" font-weight="700" fill="#1a5fd0" text-anchor="middle">FREE US GOV DATA</text>
+  <rect x="16" y="20" width="190" height="186" rx="8" fill="#e7eff8" stroke="#00356B" stroke-width="1.2"/>
+  <text x="111" y="42" font-size="12.5" font-weight="700" fill="#00356B" text-anchor="middle">FREE US GOV DATA</text>
   <text x="111" y="58" font-size="9.5" fill="#6c7786" text-anchor="middle">no API key required</text>
   <text x="30" y="82"  font-size="11" fill="#15191f">NHTSA vPIC &rarr; MSRP</text>
   <text x="30" y="103" font-size="11" fill="#15191f">NHTSA Recalls</text>
@@ -298,8 +303,8 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
   <text x="30" y="190" font-size="11" fill="#15191f">AAA cost basis (2025)</text>
 
   <!-- deterministic core -->
-  <rect x="16" y="228" width="190" height="130" rx="8" fill="#e8f6ef" stroke="#0f7a4d" stroke-width="1.2"/>
-  <text x="111" y="250" font-size="12.5" font-weight="700" fill="#0f7a4d" text-anchor="middle">PYTHON CORE</text>
+  <rect x="16" y="228" width="190" height="130" rx="8" fill="#e4f2ec" stroke="#15674a" stroke-width="1.2"/>
+  <text x="111" y="250" font-size="12.5" font-weight="700" fill="#15674a" text-anchor="middle">PYTHON CORE</text>
   <text x="111" y="266" font-size="9.5" fill="#6c7786" text-anchor="middle">no LLM touches this</text>
   <text x="30" y="290" font-size="11" fill="#15191f">catalog.py  hard filter</text>
   <text x="30" y="310" font-size="11" fill="#15191f">depreciation.py  value</text>
@@ -330,11 +335,11 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
   <text x="353" y="316" font-size="12" font-weight="700" text-anchor="middle">4 Analyst</text>
   <text x="353" y="334" font-size="9.5" fill="#6c7786" text-anchor="middle">reads the cost table</text>
 
-  <rect x="270" y="380" width="166" height="76" rx="7" fill="#fdeceb" stroke="#b3261e" stroke-width="1.6"/>
-  <text x="353" y="404" font-size="12" font-weight="700" fill="#b3261e" text-anchor="middle">5 Critic</text>
+  <rect x="270" y="380" width="166" height="76" rx="7" fill="#fbeae9" stroke="#9f2420" stroke-width="1.6"/>
+  <text x="353" y="404" font-size="12" font-weight="700" fill="#9f2420" text-anchor="middle">5 Critic</text>
   <text x="353" y="421" font-size="9.5" fill="#6c7786" text-anchor="middle">fact-checks every claim</text>
   <text x="353" y="437" font-size="9.5" fill="#6c7786" text-anchor="middle">against raw records</text>
-  <text x="353" y="451" font-size="9" fill="#b3261e" text-anchor="middle">6/6 attacks caught</text>
+  <text x="353" y="451" font-size="9" fill="#9f2420" text-anchor="middle">6/6 attacks caught</text>
 
   <!-- user -->
   <rect x="640" y="150" width="190" height="80" rx="8" fill="#fafbfc" stroke="#dfe4ea"/>
@@ -355,7 +360,7 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
   <line x1="600" y1="234" x2="680" y2="234" stroke="#6c7786" marker-end="url(#ar)"/>
   <line x1="206" y1="420" x2="240" y2="420" stroke="#b3261e" stroke-dasharray="3 3"/>
   <line x1="240" y1="420" x2="266" y2="420" stroke="#b3261e" stroke-dasharray="3 3" marker-end="url(#ar)"/>
-  <text x="222" y="412" font-size="8.5" fill="#b3261e">ground truth</text>
+  <text x="222" y="412" font-size="8.5" fill="#9f2420">ground truth</text>
 </svg>
 <figcaption>
   Figure 1. Data flows left to right. The Critic is the only agent that receives both

@@ -1,26 +1,38 @@
 /* UsedCarDossier - no build step, no framework. Plain CSS. */
 
+/* Yale palette.
+   Yale Blue #00356B is the primary. Everything else is built around it:
+   ink tones are blue-shifted rather than neutral grey, surfaces stay white,
+   and the single accent carries navigation, emphasis and data highlights. */
 :root {
-  --ink:        #11161d;
-  --ink-2:      #39434f;
-  --ink-3:      #6b7684;
-  --line:       #e3e7ec;
-  --line-2:     #eef1f4;
-  --bg:         #f7f8fa;
+  --yale:       #00356B;   /* Yale Blue */
+  --yale-dark:  #00254A;
+  --yale-mid:   #286DC0;   /* Yale accent blue */
+  --yale-light: #63AAFF;
+
+  --ink:        #0c1b2e;
+  --ink-2:      #33475f;
+  --ink-3:      #65788e;
+  --line:       #dbe3ec;
+  --line-2:     #eaeff5;
+  --bg:         #f4f7fa;
   --surface:    #ffffff;
-  --accent:     #1a5fd0;
-  --accent-ink: #0d3d8c;
-  --accent-bg:  #eaf1fd;
-  --good:       #0f7a4d;
-  --good-bg:    #e6f5ed;
-  --warn:       #9a5b00;
-  --warn-bg:    #fdf3e2;
-  --bad:        #b3261e;
-  --bad-bg:     #fdecea;
-  --radius:     12px;
-  --radius-sm:  8px;
-  --shadow:     0 1px 2px rgba(17,22,29,.05), 0 4px 16px rgba(17,22,29,.06);
-  --shadow-lg:  0 8px 40px rgba(17,22,29,.14);
+
+  --accent:     var(--yale);
+  --accent-ink: var(--yale-dark);
+  --accent-bg:  #e7eff8;
+
+  --good:       #15674a;
+  --good-bg:    #e4f2ec;
+  --warn:       #8a5200;
+  --warn-bg:    #fdf2e0;
+  --bad:        #9f2420;
+  --bad-bg:     #fbeae9;
+
+  --radius:     10px;
+  --radius-sm:  7px;
+  --shadow:     0 1px 2px rgba(0,53,107,.06), 0 4px 16px rgba(0,53,107,.07);
+  --shadow-lg:  0 8px 40px rgba(0,53,107,.18);
   --mono:       'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
 }
 
@@ -42,8 +54,8 @@ body {
 /* ---------- top bar ---------- */
 
 .topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
+  background: var(--yale);
+  border-bottom: 3px solid var(--yale-light);
   position: sticky; top: 0; z-index: 50;
 }
 .topbar-inner {
@@ -52,14 +64,18 @@ body {
 }
 .brand {
   display: flex; align-items: center; gap: 10px;
-  font-size: 16px; font-weight: 500; color: var(--ink);
-  text-decoration: none; letter-spacing: -.01em;
+  font-size: 17px; font-weight: 500; color: #fff;
+  text-decoration: none; letter-spacing: -.005em;
+  font-family: Georgia, 'Times New Roman', serif;
 }
 .brand strong { font-weight: 700; }
+/* A small white shield-ish mark reads as institutional without aping the
+   actual Yale coat of arms, which is trademarked. */
 .brand-mark {
-  width: 22px; height: 22px; border-radius: 6px;
-  background: linear-gradient(135deg, var(--accent), #4a8ef0);
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);
+  width: 21px; height: 24px; background: #fff;
+  border-radius: 3px 3px 11px 11px;
+  box-shadow: inset 0 0 0 3px var(--yale);
+  border: 1.5px solid #fff;
 }
 .topnav { display: flex; gap: 4px; }
 
@@ -70,6 +86,8 @@ body {
   transition: background .13s, color .13s;
 }
 .linkbtn:hover { background: var(--line-2); color: var(--ink); }
+.topnav .linkbtn { color: rgba(255,255,255,.82); }
+.topnav .linkbtn:hover { background: rgba(255,255,255,.14); color: #fff; }
 .linkbtn.inline { padding: 0 2px; color: var(--accent); font-weight: 500; }
 .linkbtn.inline:hover { background: none; text-decoration: underline; }
 .linkbtn.back { margin: 22px 0 14px; padding-left: 0; }
@@ -84,12 +102,13 @@ body {
 
 .hero { padding: 56px 0 36px; max-width: 760px; }
 .hero h1 {
-  font-size: 38px; line-height: 1.2; letter-spacing: -.025em;
-  margin: 0 0 16px; font-weight: 700;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 39px; line-height: 1.22; letter-spacing: -.015em;
+  margin: 0 0 16px; font-weight: 700; color: var(--yale-dark);
 }
 .hero h1 em {
-  font-style: normal; color: var(--accent);
-  border-bottom: 3px solid var(--accent-bg);
+  font-style: italic; color: var(--yale-mid);
+  border-bottom: 3px solid var(--yale-light);
 }
 .lede { font-size: 17px; color: var(--ink-2); margin: 0 0 28px; }
 
@@ -107,7 +126,10 @@ body {
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow);
 }
-.card h2 { margin: 0 0 6px; font-size: 20px; letter-spacing: -.015em; }
+.card h2 {
+  margin: 0 0 6px; font-size: 21px; letter-spacing: -.01em;
+  font-family: Georgia, 'Times New Roman', serif; color: var(--yale-dark);
+}
 .hint { color: var(--ink-3); font-size: 13.5px; margin: 0 0 18px; }
 
 /* ---------- funnel ---------- */
@@ -223,17 +245,20 @@ input:focus, select:focus {
   display: flex; justify-content: space-between; align-items: flex-start;
   gap: 20px; padding: 20px 22px; flex-wrap: wrap;
 }
-.rescard h3 { margin: 0 0 3px; font-size: 18px; letter-spacing: -.015em; }
+.rescard h3 {
+  margin: 0 0 3px; font-size: 19px; letter-spacing: -.01em;
+  font-family: Georgia, 'Times New Roman', serif; color: var(--yale-dark);
+}
 .rescard .sub { font-size: 12.5px; color: var(--ink-3); }
 .rank {
-  display: inline-grid; place-items: center; width: 22px; height: 22px;
-  border-radius: 6px; background: var(--ink); color: #fff;
+  display: inline-grid; place-items: center; width: 23px; height: 23px;
+  border-radius: 5px; background: var(--yale); color: #fff;
   font-size: 12px; font-weight: 600; margin-right: 9px; vertical-align: 2px;
 }
 
 .bignum { text-align: right; }
 .bignum .n {
-  font-family: var(--mono); font-size: 25px; font-weight: 600;
+  font-family: var(--mono); font-size: 25px; font-weight: 600; color: var(--yale);
   letter-spacing: -.02em; display: block; line-height: 1.15;
 }
 .bignum .l { font-size: 11.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
@@ -273,7 +298,7 @@ input:focus, select:focus {
 .costtable td.num { font-family: var(--mono); text-align: right; white-space: nowrap; font-weight: 600; }
 .costtable .basis { font-size: 12px; color: var(--ink-3); margin-top: 3px; line-height: 1.45; }
 .costtable tr.total td {
-  border-top: 2px solid var(--ink); border-bottom: 0;
+  border-top: 2px solid var(--yale); color: var(--yale-dark); border-bottom: 0;
   font-weight: 700; font-size: 16px; padding-top: 13px;
 }
 .asm {
@@ -286,7 +311,8 @@ input:focus, select:focus {
 
 .section { margin-top: 22px; }
 .section > h3 {
-  font-size: 16px; margin: 0 0 10px; letter-spacing: -.01em;
+  font-size: 17px; margin: 0 0 10px; letter-spacing: -.005em;
+  font-family: Georgia, 'Times New Roman', serif; color: var(--yale-dark);
   display: flex; align-items: center; gap: 9px;
 }
 .pill {
@@ -397,7 +423,7 @@ input:focus, select:focus {
 /* ---------- footer ---------- */
 
 .foot {
-  border-top: 1px solid var(--line); padding: 22px 0;
+  border-top: 4px solid var(--yale); padding: 22px 0;
   background: var(--surface); margin-top: 40px;
 }
 .foot p { margin: 0; font-size: 12.5px; color: var(--ink-3); }
