@@ -55,9 +55,9 @@ const AGENTS = {
 };
 
 let traceTimer = null;
+let elapsedTimer = null;
 
 function startLoading(kind, msg) {
-  $('#loading-msg').textContent = msg;
   const steps = AGENTS[kind];
   const ul = $('#agent-trace');
   ul.innerHTML = steps
@@ -65,36 +65,72 @@ function startLoading(kind, msg) {
     .join('');
   $('#loading').classList.add('on');
 
+  // Hold the last step as "running" rather than marking everything done and
+  // then sitting silently -- the trace is indicative, not a real progress bar,
+  // and pretending otherwise is how a slow run starts to look like a hung one.
   let i = 0;
   const tick = () => {
     const items = Array.from(ul.children);
     if (i > 0) items[i - 1].className = 'done';
     if (i < items.length) items[i].className = 'run';
     i += 1;
-    if (i <= items.length) traceTimer = setTimeout(tick, 1400);
+    if (i < items.length) traceTimer = setTimeout(tick, 2200);
   };
   tick();
+
+  // A live counter, so the user can always tell the thing is still working.
+  const started = Date.now();
+  const render = () => {
+    const s = Math.round((Date.now() - started) / 1000);
+    const slow = s > 45
+      ? ' &mdash; first lookup for these cars, pulling live EPA and NHTSA data'
+      : '';
+    $('#loading-msg').innerHTML = `${esc(msg)} &middot; ${s}s${slow}`;
+  };
+  render();
+  elapsedTimer = setInterval(render, 1000);
 }
 
 function stopLoading() {
   clearTimeout(traceTimer);
+  clearInterval(elapsedTimer);
   $('#loading').classList.remove('on');
 }
 
 /* ---------- API ---------- */
 
-async function api(path, body) {
+/* A cold discovery can legitimately take a while: it pulls live EPA and NHTSA
+   data for every candidate. But "slow" must never be indistinguishable from
+   "broken", so every call carries an explicit timeout and the overlay keeps
+   reporting elapsed time rather than sitting on one frozen message. */
+const API_TIMEOUT_MS = 180000;
+
+async function api(path, body, timeoutMs = API_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   const opts = body
     ? { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body) }
-    : {};
-  const res = await fetch(path, opts);
-  if (!res.ok) {
-    let detail = res.statusText;
-    try { detail = (await res.json()).detail || detail; } catch (_) {}
-    throw new Error(detail);
+        body: JSON.stringify(body), signal: controller.signal }
+    : { signal: controller.signal };
+  try {
+    const res = await fetch(path, opts);
+    if (!res.ok) {
+      let detail = res.statusText;
+      try { detail = (await res.json()).detail || detail; } catch (_) {}
+      throw new Error(detail);
+    }
+    return await res.json();
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new Error(
+        `Timed out after ${Math.round(timeoutMs / 1000)}s. The government APIs ` +
+        `can be slow on a first lookup; the data is now cached, so trying again ` +
+        `is usually much faster.`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
   }
-  return res.json();
 }
 
 /* ---------- boot ---------- */

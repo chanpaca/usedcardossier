@@ -243,3 +243,31 @@ git repo committed.
 **User testing.** The Impact section is computed, not observed. Recruit 3-4 testers who are
 actually car shopping, record their five-year cost estimate before and after.
 
+## 2026-10-16 — Bug: discovery appeared to hang
+
+User reported discovery stuck on "Analysing options". Four compounding causes, all mine:
+
+1. **Peer scan ran per candidate.** I had raised PEER_SCAN_LIMIT to 70 to fix the defect-signal
+   bug, but `build_risk` is called once per candidate -- 14 candidates x up to 70 peer lookups
+   of the SAME segment. Fixed by memoising the peer baseline per (year, body style) on the
+   Services object; it is identical for every candidate in a run.
+2. **Budget filtered AFTER enrichment.** Expensive HTTP was spent on cars that were then
+   discarded, and worse the round robin picked the 14 newest, all above budget, returning ZERO
+   results while affordable older cars were never tried. Moved the price screen before
+   enrichment (pure arithmetic, no HTTP) and screened on the band rather than the point.
+3. **Truck model names.** EPA writes "Sierra 4WD AT4", "Tacoma 4WD Double Cab Off-Road" --
+   drivetrain mid-string, so suffix stripping could not cope. Replaced guessing with
+   `resolve_model`: fetch NHTSA's own published model list per (year, make) and score by token
+   overlap. Weak matches (score < 0.25) are REFUSED rather than guessed, because attributing
+   one truck's defect record to another would undermine the whole premise.
+4. **Flat MSRP fallback.** Every truck priced at $46,667 regardless of model or year, so eight
+   different trucks all showed $46,100. Added a per-year MSRP index: log-linear fit of MSRP on
+   model year, +4.2%/yr (R2=0.09, n=539), smoothed rather than raw medians which are noisy at
+   this sample size.
+
+Frontend: added a 180s timeout with an honest message, and a live elapsed-seconds counter so a
+slow run can never be mistaken for a hung one.
+
+**Measured after:** cold segment 30-50s, warm 6-17s. All four body styles return 8 results with
+real year and make diversity (previously trucks returned 0).
+

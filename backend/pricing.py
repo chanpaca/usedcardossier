@@ -77,20 +77,56 @@ def msrp_from_vin(base_price: float | None) -> MsrpEstimate | None:
     )
 
 
-def estimate_msrp(make: str, model: str, body_style: str) -> MsrpEstimate:
+def _year_factor(ref: dict[str, Any], model_year: int | None) -> tuple[float, str]:
+    """Scale a median MSRP toward the model year being asked about.
+
+    Without this every model year of a body type priced identically, which in
+    one measured run gave eight different trucks the same $46,100 estimate.
+    The index is a log-linear fit of MSRP on model year (+4.2%/yr) rather than
+    raw per-year medians, which are noisy at this sample size.
+    """
+    if not model_year:
+        return 1.0, ""
+    index = ref.get("year_index") or {}
+    factor = index.get(str(int(model_year)))
+    if not factor:
+        return 1.0, ""
+    base = ref.get("index_base_year", 2018)
+    return float(factor), (
+        f" Scaled by {factor:.2f}x for a {model_year} model year "
+        f"(index base {base})."
+    )
+
+
+def estimate_msrp(
+    make: str, model: str, body_style: str, model_year: int | None = None
+) -> MsrpEstimate:
     """Best available MSRP when there is no VIN."""
     ref = _reference()
+    factor, year_note = _year_factor(ref, model_year)
 
     key = f"{make}|{model}"
     direct = ref.get("by_make_model", {}).get(key)
     if direct:
+        # The model-level median already reflects whatever years are in the
+        # sample, so only re-index relative to that model's own median year.
+        sample_year = (ref.get("by_make_model_year") or {}).get(key)
+        adj = 1.0
+        if sample_year and model_year:
+            index = ref.get("year_index") or {}
+            here = index.get(str(int(model_year)))
+            there = index.get(str(int(sample_year)))
+            if here and there:
+                adj = float(here) / float(there)
         return MsrpEstimate(
-            value=float(direct),
+            value=float(direct) * adj,
             source="make_model",
             confidence="medium",
             note=(
                 f"Median original MSRP for {make} {model} from the reference "
                 f"table. Not trim-specific -- enter a VIN for the exact figure."
+                + (f" Adjusted {adj:.2f}x to the {model_year} model year."
+                   if adj != 1.0 else "")
             ),
         )
 
@@ -98,20 +134,21 @@ def estimate_msrp(make: str, model: str, body_style: str) -> MsrpEstimate:
     body_median = ref.get("by_body", {}).get(body_key)
     if body_median:
         return MsrpEstimate(
-            value=float(body_median),
+            value=float(body_median) * factor,
             source="body",
             confidence="low",
             note=(
                 f"No model-level figure available, so this uses the median for "
-                f"{body_key} vehicles. The reference sample skews new and "
-                f"premium, so this likely overstates MSRP for a mainstream "
+                f"{body_key} vehicles.{year_note} The reference sample skews new "
+                f"and premium, so this likely overstates MSRP for a mainstream "
                 f"model. Treat the resulting price band as indicative only."
             ),
         )
 
     return MsrpEstimate(
-        value=float(ref.get("global_median", 30000)),
+        value=float(ref.get("global_median", 30000)) * factor,
         source="global",
         confidence="low",
-        note="No model or body figure available; using the overall median.",
+        note="No model or body figure available; using the overall median."
+             + year_note,
     )

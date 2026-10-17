@@ -48,7 +48,12 @@ MAX_CANDIDATES_TO_ENRICH = 14
 # willing to try to get them. Many nameplates in a size class sell in small
 # numbers, so the scan limit has to exceed the target comfortably.
 MAX_PEERS = 10
-PEER_SCAN_LIMIT = 70
+# Candidates tried per segment to find MAX_PEERS usable profiles. Peers are
+# interleaved one-per-make, so ~20 reaches every make in a body style once.
+# 70 was wasteful: when few peers cleared the complaint threshold the scan ran
+# to the end, and a cold multi-year search took 186s. 32 keeps the baseline
+# quality (still 8-10 peers on mainstream segments) at a third of the calls.
+PEER_SCAN_LIMIT = 32
 MIN_PEER_COMPLAINTS = 20
 # Typical mileage accumulation, used when the buyer has not named a car.
 ASSUMED_MILES_PER_YEAR = 12_000
@@ -64,6 +69,10 @@ class Services:
     vpic: VpicClient
     depreciation: DepreciationModel
     llm: LLMClient | None = None
+    # Peer baselines, keyed by (year, body style, EPA class). Every candidate
+    # in a discovery run shares a segment, so this is computed once per
+    # segment instead of once per car. Lives for the process, not the request.
+    segment_cache: dict = field(default_factory=dict)
 
     @classmethod
     def build(cls, llm: LLMClient | None = None) -> Services:
@@ -88,9 +97,7 @@ def peer_models(
     peers = [
         e
         for e in catalog.load_catalog()
-        if e.year == entry.year
-        and e.body_style == entry.body_style
-        and e.make != entry.make
+        if e.year == entry.year and e.body_style == entry.body_style
     ]
     # Prefer the same EPA class for a tighter comparison, then fill out with
     # the rest of the body style.
@@ -131,31 +138,39 @@ def peer_models(
     return (interleave(same_class) + interleave(rest))[:limit]
 
 
-def build_risk(
+def segment_profiles(
     svc: Services, entry: catalog.CatalogEntry
-) -> tuple[RiskSignal, int]:
-    """Complaint risk for one vehicle against its model-year peers.
+) -> dict[str, dict[str, int]]:
+    """Complaint profiles for one (model year, body style), keyed by make.
+
+    Memoised on the Services object, because every candidate in a discovery
+    run shares the same segment and therefore the same baseline. Without this
+    the peer scan ran once per candidate: 14 candidates x up to 70 peer
+    lookups, which is what made a cold discovery take over a minute. Computing
+    it once per segment cuts that by roughly the candidate count.
 
     Peers are scanned until enough of them carry usable complaint volume, not
-    merely until a fixed number of candidates has been tried. A first version
-    stopped after 10 candidates, and because many nameplates in a size class
-    sell in small numbers, often only three cleared the 20-complaint bar --
-    below the minimum for a baseline, so the defect signal silently switched
-    itself off on exactly the mainstream cars it matters most for.
+    merely until a fixed number has been tried. An earlier version stopped
+    after 10 candidates, and because many nameplates in a size class sell in
+    small numbers, often only three cleared the 20-complaint bar -- below the
+    minimum for a baseline, so the defect signal silently switched itself off
+    on exactly the mainstream cars it matters most for.
     """
-    mine = svc.nhtsa.complaints(entry.year, entry.make, entry.model)
+    cache_key = (entry.year, entry.body_style)
+    hit = svc.segment_cache.get(cache_key)
+    if hit is not None:
+        return hit
 
-    profiles: list[dict[str, int]] = []
-    makes_used: set[str] = set()
+    profiles: dict[str, dict[str, int]] = {}
     seen_models: set[str] = set()
 
     for peer in peer_models(entry, limit=PEER_SCAN_LIMIT):
-        if len(profiles) >= MAX_PEERS:
-            break
         # One profile per make, so a single prolific brand cannot define the
         # baseline on its own. Candidates are still scanned across every model
         # of that make until one carries usable volume.
-        if peer.make in makes_used:
+        if len(profiles) >= MAX_PEERS + 1:
+            break
+        if peer.make in profiles:
             continue
         key = f"{peer.make}|{peer.model}"
         if key in seen_models:
@@ -166,8 +181,22 @@ def build_risk(
         except Exception:  # noqa: BLE001 - a peer failing must not fail the run
             continue
         if profile.total >= MIN_PEER_COMPLAINTS:
-            profiles.append(profile.by_component)
-            makes_used.add(peer.make)
+            profiles[peer.make] = profile.by_component
+
+    svc.segment_cache[cache_key] = profiles
+    return profiles
+
+
+def build_risk(
+    svc: Services, entry: catalog.CatalogEntry
+) -> tuple[RiskSignal, int]:
+    """Complaint risk for one vehicle against its model-year peers."""
+    mine = svc.nhtsa.complaints(entry.year, entry.make, entry.model)
+
+    # The shared baseline includes every make in the segment; drop this
+    # vehicle's own make so a car is never compared against itself.
+    pool = segment_profiles(svc, entry)
+    profiles = [p for make, p in pool.items() if make != entry.make][:MAX_PEERS]
 
     label = f"{entry.year} {entry.body_style}s"
     return complaint_risk(mine.by_component, profiles, segment_label=label), mine.total
@@ -252,16 +281,39 @@ def run_discovery(
     # model years are usually the better value and are exactly what a used
     # buyer is weighing, so candidates are drawn round-robin across the
     # available years, one nameplate each.
-    # Buckets are keyed by (year, make) so the round robin spreads over both.
-    # Keying on year alone still returned eight Hondas, because within a year
-    # the catalog is sorted by make and Honda comes first.
-    buckets: dict[tuple[int, str], list[catalog.CatalogEntry]] = {}
+    # Price-screen BEFORE spending any HTTP calls.
+    #
+    # Enriching first and filtering on budget afterwards wasted the expensive
+    # work and, worse, could return nothing at all: the round robin picked the
+    # 14 newest cars, every one of them priced above the budget, while older
+    # models that would have fitted were never tried. The estimate below is
+    # pure arithmetic over data already in memory, so screening on it first is
+    # both faster and more likely to find something.
+    affordable: list[catalog.CatalogEntry] = []
     seen: set[tuple[str, str]] = set()
     for entry in matches:
         key = (entry.make, entry.model)
         if key in seen:
             continue
         seen.add(key)
+        msrp = estimate_msrp(entry.make, entry.model, entry.body_style, entry.year)
+        age = max(0, today.year - entry.year)
+        value = svc.depreciation.estimate(
+            msrp.value, entry.year, age * ASSUMED_MILES_PER_YEAR,
+            entry.vehicle_class, as_of=today,
+        )
+        # Compare against the band, not the point estimate. With ~21% median
+        # error, screening on the point alone would discard cars that plainly
+        # could fall inside the buyer's budget.
+        if value.high < profile.budget_min or value.low > profile.budget_max:
+            continue
+        affordable.append(entry)
+
+    # Buckets are keyed by (year, make) so the round robin spreads over both.
+    # Keying on year alone still returned eight Hondas, because within a year
+    # the catalog is sorted by make and Honda comes first.
+    buckets: dict[tuple[int, str], list[catalog.CatalogEntry]] = {}
+    for entry in affordable:
         buckets.setdefault((entry.year, entry.make), []).append(entry)
 
     # Newest year first, but makes interleaved within each year.
@@ -294,14 +346,23 @@ def run_discovery(
             continue
         if candidate is None:
             continue
-        if not (profile.budget_min <= candidate.value_point <= profile.budget_max):
+        # Band, not point -- consistent with the pre-screen above.
+        if (candidate.value_high < profile.budget_min
+                or candidate.value_low > profile.budget_max):
             continue
         candidates.append(candidate)
 
     if not candidates:
+        hint = (
+            " Nothing in the catalog priced into that range -- try raising the "
+            "maximum or allowing older model years."
+            if not affordable else
+            " Candidates were found but none could be priced; the data sources "
+            "may be unreachable."
+        )
         notes.append(
             "No vehicles matched that combination of body style, brands and "
-            "budget. Try widening the budget or adding brands."
+            "budget." + hint
         )
     elif skipped:
         # One quiet line, not a wall of URLs.
@@ -340,7 +401,7 @@ def _enrich(
     if trim is None:
         return None
 
-    msrp = estimate_msrp(entry.make, entry.model, entry.body_style)
+    msrp = estimate_msrp(entry.make, entry.model, entry.body_style, entry.year)
     age = max(0, today.year - entry.year)
     mileage = age * ASSUMED_MILES_PER_YEAR
 
@@ -499,7 +560,7 @@ def run_dossier_flow(
         if info:
             msrp = msrp_from_vin(info.base_price)
     if msrp is None:
-        msrp = estimate_msrp(make, model, entry.body_style)
+        msrp = estimate_msrp(make, model, entry.body_style, year)
 
     age = max(0, today.year - year)
     miles = mileage if mileage is not None else age * ASSUMED_MILES_PER_YEAR

@@ -132,10 +132,106 @@ def _normalise_component(raw: str) -> str:
     return head or "UNKNOWN"
 
 
+# Tokens that describe drivetrain, body or trim rather than the nameplate.
+# Used when scoring an EPA name against NHTSA's own model list, so they do not
+# count for or against a match.
+_NOISE_TOKENS = {
+    "2WD", "4WD", "AWD", "FWD", "RWD",
+    "CAB", "QUAD", "CREW", "MEGA", "REGULAR", "DOUBLE", "EXTENDED", "ACCESS",
+    "PICKUP", "TRUCK", "SUV", "WAGON", "SEDAN", "COUPE", "HATCHBACK", "VAN",
+    "2DR", "4DR", "5DR", "LWB", "SWB",
+}
+
+
+# Minimum token-overlap score before a fuzzy match is accepted. Below this we
+# return the cleaned name instead, which will simply fail and let the caller
+# skip the vehicle. Attributing one truck's defect record to a different truck
+# would be worse than reporting nothing: the entire value of this app rests on
+# its claims being traceable to the right vehicle.
+MIN_MATCH_SCORE = 0.25
+
+
+def _tokens(name: str) -> set[str]:
+    cleaned = re.sub(r"[^A-Z0-9 ]+", " ", (name or "").upper())
+    return {t for t in cleaned.split() if t and t not in _NOISE_TOKENS}
+
+
 class NhtsaClient:
     def __init__(self, cache: HttpCache, base_url: str = NHTSA_BASE_URL) -> None:
         self.cache = cache
         self.base_url = base_url
+
+    # -- model-name resolution ----------------------------------------------
+
+    def known_models(self, year: int, make: str) -> list[str]:
+        """Every model NHTSA indexes for this make and year.
+
+        NHTSA publishes its own list, which removes the guesswork. One cached
+        call per (year, make) is far cheaper than discovering by trial that a
+        name is wrong, which costs a failed request per vehicle.
+        """
+        payload = self.cache.get_json(
+            self.base_url,
+            "/products/vehicle/models",
+            {"modelYear": year, "make": make, "issueType": "c"},
+        )
+        seen, out = set(), []
+        for row in (payload or {}).get("results") or []:
+            model = (row.get("model") or "").strip()
+            if model and model.upper() not in seen:
+                seen.add(model.upper())
+                out.append(model)
+        return out
+
+    def resolve_model(self, year: int, make: str, model: str) -> str:
+        """Map an EPA model string onto the name NHTSA actually indexes.
+
+        Suffix stripping alone cannot cope with the truck catalogue, where EPA
+        writes things like "Sierra 4WD AT4" and "Tacoma 4WD Double Cab
+        Off-Road" -- the drivetrain sits mid-string and the nameplate NHTSA
+        uses ("SIERRA 1500") shares only one token. So the cleaned name is
+        scored against NHTSA's published list by token overlap, and the
+        shortest best-scoring candidate wins.
+
+        Falls back to plain normalisation if the list is unavailable, so a
+        network failure degrades rather than breaks.
+        """
+        cleaned = normalise_model(model)
+        try:
+            candidates = self.known_models(year, make)
+        except Exception:  # noqa: BLE001 - fall back to the cleaned name
+            return cleaned
+        if not candidates:
+            return cleaned
+
+        wanted = _tokens(cleaned) or _tokens(model)
+        if not wanted:
+            return cleaned
+
+        # Exact match on the cleaned name always wins.
+        for candidate in candidates:
+            if candidate.upper() == cleaned.upper():
+                return candidate
+
+        best, best_score = None, 0.0
+        for candidate in candidates:
+            have = _tokens(candidate)
+            if not have:
+                continue
+            shared = wanted & have
+            if not shared:
+                continue
+            # Reward overlap, penalise extra tokens on either side, so
+            # "SIERRA 1500" beats "SIERRA LIMITED 1500" for "Sierra 4WD AT4".
+            score = len(shared) / len(wanted | have)
+            if score > best_score:
+                best, best_score = candidate, score
+            elif score == best_score and best and len(candidate) < len(best):
+                best = candidate
+
+        if best is None or best_score < MIN_MATCH_SCORE:
+            return cleaned
+        return best
 
     # -- recalls -------------------------------------------------------------
 
@@ -143,7 +239,8 @@ class NhtsaClient:
         payload = self.cache.get_json(
             self.base_url,
             "/recalls/recallsByVehicle",
-            {"make": make, "model": normalise_model(model), "modelYear": year},
+            {"make": make, "model": self.resolve_model(year, make, model),
+             "modelYear": year},
         )
         results = (payload or {}).get("results") or []
         return [
@@ -166,7 +263,8 @@ class NhtsaClient:
         payload = self.cache.get_json(
             self.base_url,
             "/complaints/complaintsByVehicle",
-            {"make": make, "model": normalise_model(model), "modelYear": year},
+            {"make": make, "model": self.resolve_model(year, make, model),
+             "modelYear": year},
         )
         results = (payload or {}).get("results") or []
         components: Counter[str] = Counter()
@@ -193,7 +291,8 @@ class NhtsaClient:
         """NCAP stars. Needs two calls: resolve body styles, then fetch each."""
         index = self.cache.get_json(
             self.base_url,
-            f"/SafetyRatings/modelyear/{year}/make/{make}/model/{normalise_model(model)}",
+            f"/SafetyRatings/modelyear/{year}/make/{make}"
+            f"/model/{self.resolve_model(year, make, model)}",
         )
         ratings = []
         for entry in (index or {}).get("Results") or []:
