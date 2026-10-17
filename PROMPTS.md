@@ -318,3 +318,19 @@ Report Impact section and slide 9 updated; slide 10 next-steps reworded from "fi
 testing" to "quantify user testing". Rebuilt: report.pdf still 13 pages, slides still 10,
 dist still self-contained with zero failed requests.
 
+### Before/after number added
+
+User's five-year estimate: **$30,000**. App computes **$34,100**. Gap $4,100 = **12%**.
+
+Written up against the tempting conclusion rather than for it. A 12% gap means she was
+CLOSE -- "buyers have no idea what a car costs" is not supported by this data point, and
+claiming it would be exactly the overstatement the Critic agent exists to catch. The honest
+reading is stronger for the project anyway: she had the magnitude roughly right and still
+found the output useful, which is direct support for the comprehension-not-comparison
+finding. A correct total tells you nothing about composition.
+
+Caveat recorded in-line: the estimate was given AFTER she had seen the app, so it is a
+recalled prior and may be anchored. Labelled indicative, not a measured before-and-after.
+
+Report now 14 printed pages (still inside 10-15), slides still 10.
+

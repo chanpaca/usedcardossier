@@ -733,6 +733,8 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
       <td class="num">$34,100 vs $11,500</td><td>Computed cost table</td></tr>
     <tr><td>Maintenance alone on that car, vs its purchase price</td>
       <td class="num">$12,877 vs $11,500</td><td>AAA basis + NHTSA risk adjustment</td></tr>
+    <tr><td>First user's estimate of five-year cost, vs computed</td>
+      <td class="num">$30,000 vs $34,100</td><td>User estimate, 17 Oct (see caveat below)</td></tr>
   </tbody>
 </table>
 
@@ -782,6 +784,45 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
   </p>
 </div>
 
+<h4>Before and after, in dollars</h4>
+
+<p>
+  Asked what she thought five years of owning the reference car came to, she said
+  <strong>about $30,000</strong>. The app computes <strong>$34,100</strong>.
+</p>
+
+<table>
+  <caption>2018 Honda Accord LX, 78,000 miles, bought at $11,500, 12,000 mi/yr.</caption>
+  <thead><tr><th>Five-year cost of ownership</th><th class="num">Amount</th>
+    <th class="num">vs computed</th></tr></thead>
+  <tbody>
+    <tr><td>User's estimate</td><td class="num">$30,000</td><td class="num">&minus;12%</td></tr>
+    <tr><td>Computed by the app</td><td class="num">$34,100</td><td class="num">&mdash;</td></tr>
+    <tr class="total"><td>Gap</td><td class="num">$4,100</td><td class="num">12%</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <p><strong>The honest reading: she was close, and that is the more interesting
+  result.</strong> A 12 percent gap is a good estimate, and it sits inside this model's own
+  stated uncertainty. The tempting conclusion &mdash; that buyers have no idea what a car
+  costs &mdash; is not what this data point supports, and claiming it would be the kind of
+  overstatement the Critic agent exists to catch.</p>
+  <p>What it does support is the finding below. She had the <em>magnitude</em> roughly right
+  and still found the output useful. The value was not in correcting her number; it was in
+  showing the structure underneath it &mdash; that maintenance alone exceeds the purchase
+  price, and that $2,750 of fuel cost hides between trims of one model year. Those are
+  facts about composition, and a correct total tells you none of them.</p>
+</div>
+
+<div class="callout warn">
+  <p><strong>Methodological caveat, stated because it limits the claim.</strong> This
+  estimate was given <em>after</em> she had already seen the app, so it is a recalled prior
+  rather than a clean baseline and may be anchored by the figure she had seen. A properly
+  ordered test records the estimate first. The gap above should be read as indicative, not
+  as a measured before-and-after.</p>
+</div>
+
 <h4>Why the second remark is the real finding</h4>
 
 <p>
@@ -803,14 +844,14 @@ footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);
 </p>
 
 <div class="callout warn">
-  <p><strong>What this evidence is, and what it is not.</strong> One user, qualitative,
-  recorded as a paraphrase rather than a verbatim transcript. She did not run a specific
-  listing she was considering, so there is no before-and-after dollar estimate and no
-  measurement of decision change. It is genuine outside reaction to the real app; it is
-  not a study, and the sample is one.</p>
-  <p>The stronger version of this test, still outstanding: give a user a car they are
-  actually weighing, record their five-year cost estimate before and after, and measure
-  the gap. That would turn a reaction into a number.</p>
+  <p><strong>What this evidence is, and what it is not.</strong> One user, recorded as a
+  paraphrase rather than a verbatim transcript, with one cost estimate collected after
+  exposure rather than before. She was not weighing a specific listing of her own, so no
+  purchase decision was observed changing. It is genuine outside reaction to the real app
+  with one supporting number; it is not a study, and the sample is one.</p>
+  <p>The stronger version, still outstanding: several users, each given a car they are
+  actually considering, estimate recorded <em>before</em> they see any output. That would
+  turn an indicative gap into a measured one.</p>
 </div>
 
 <!-- ===================== 7. LIMITS ===================== -->
