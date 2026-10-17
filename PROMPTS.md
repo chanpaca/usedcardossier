@@ -271,3 +271,14 @@ slow run can never be mistaken for a hung one.
 **Measured after:** cold segment 30-50s, warm 6-17s. All four body styles return 8 results with
 real year and make diversity (previously trucks returned 0).
 
+## 2026-10-16 — Submission prep
+
+Found a requirement gap: the spec asks for a **self-contained** report.html, but ours
+referenced `images/*.png` externally -- uploaded alone to Canvas, all 7 screenshots would have
+broken. Added `scripts/build_report.py`, which inlines every local asset as base64 and vendors
+the reveal.js CDN assets, writing to `report/dist/`.
+
+Verified by copying both files into an empty directory and rendering:
+`report.html` 3.3 MB, 7 images, 0 broken, 0 failed requests, 0 console errors;
+`slides.html` 0.2 MB, 10 slides, 0 failed requests. **Submit the copies in `report/dist/`.**
+
