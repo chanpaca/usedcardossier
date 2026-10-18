@@ -334,3 +334,16 @@ recalled prior and may be anchored. Labelled indicative, not a measured before-a
 
 Report now 14 printed pages (still inside 10-15), slides still 10.
 
+## 2026-10-18 — Demo video
+
+`scripts/record_demo.py` drives a real browser against the running app and records it.
+Nothing mocked, nothing sped up; the agent waits are the real agents. On-screen captions
+carry the narration since Playwright produces no audio.
+
+Cache warmed first (discovery 2.7s, dossier 2.3s) so the video is not dominated by spinners.
+
+Output: **report/demo/demo.mp4**, H.264, 1280x800, 25fps, 6.0 MB, **2:05** -- inside the
+2-3 minute requirement. Converted from webm because webm does not play in QuickTime or
+reliably in Canvas preview. Verified by decoding the MP4 in a browser and sampling frames
+at 10s/40s/56s/68s/92s/118s.
+

@@ -202,9 +202,22 @@ scripts/
   safety_tests.py        adversarial tests against the Critic
   capture_screenshots.py regenerate report/images from a running app
 report/
-  report.html        the written report
-  slides.html        reveal.js deck
+  report.html        the written report (editable source)
+  slides.html        reveal.js deck (editable source)
+  dist/              SELF-CONTAINED copies -- these are the ones to submit
   images/            screenshots, all from real runs
+  demo/demo.mp4      2:05 screen recording of the real app
+```
+
+### Demo video
+
+`report/demo/demo.mp4` -- 2 minutes 5 seconds, H.264, no audio. A scripted walkthrough
+of the real app against live data: the funnel, the ranked shortlist, a full dossier with
+the cost table and cited defects, the Critic's fact-check panel, and the methodology
+drawer. On-screen captions carry the narration. Regenerate with:
+
+```bash
+python -m scripts.record_demo        # needs the server running
 ```
 
 ### Rebuilding the catalog
