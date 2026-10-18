@@ -125,10 +125,37 @@ def build(name: str, do_cdn: bool) -> None:
           f"-> {size:.1f} MB")
 
 
+def build_slides_pdf() -> None:
+    """Render the deck to PDF -- Canvas asks for the slides as a PDF.
+
+    reveal.js ships a print stylesheet that activates on `?print-pdf` and lays
+    the deck out one slide per page. The page size must match the deck's
+    configured 1280x760 or slides get clipped at the edges.
+    """
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("  ! slides.pdf skipped (pip install playwright)", file=sys.stderr)
+        return
+    out = DIST / "slides.pdf"
+    url = (SRC / "slides.html").as_uri() + "?print-pdf"
+    with sync_playwright() as pw:
+        b = pw.chromium.launch()
+        pg = b.new_page(viewport={"width": 1280, "height": 760})
+        pg.goto(url, wait_until="networkidle")
+        pg.wait_for_timeout(2500)
+        pg.pdf(path=str(out), width="1280px", height="760px",
+               print_background=True,
+               margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+        b.close()
+    print(f"  {'slides.pdf':14s} rendered -> {out.stat().st_size / 1_000_000:.1f} MB")
+
+
 def main() -> int:
     print(f"building self-contained copies into {DIST}")
     build("report.html", do_cdn=False)
     build("slides.html", do_cdn=True)
+    build_slides_pdf()
 
     leftovers = []
     for name in ("report.html", "slides.html"):

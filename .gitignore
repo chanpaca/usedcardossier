@@ -31,3 +31,6 @@ data/*.log
 
 # Intermediate recording; the committed deliverable is demo.mp4 (H.264).
 report/demo/*.webm
+
+# Ready-to-upload bundle; everything in it is derived from report/dist.
+SUBMIT/
