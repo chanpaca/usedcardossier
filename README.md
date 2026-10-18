@@ -248,4 +248,4 @@ Takes several minutes and makes a few thousand cached requests.
 
 ---
 
-Built for Yale SOM MGT 409, *AI Foundations for Managers*.
+Built by **Chanseo Park** (Green Cohort) for Yale SOM MGT 409, *AI Foundations for Managers*.
