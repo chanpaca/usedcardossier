@@ -155,7 +155,6 @@ def main() -> int:
     print(f"building self-contained copies into {DIST}")
     build("report.html", do_cdn=False)
     build("slides.html", do_cdn=True)
-    build_slides_pdf()
 
     leftovers = []
     for name in ("report.html", "slides.html"):
